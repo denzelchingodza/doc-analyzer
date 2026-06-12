@@ -54,8 +54,19 @@ export default function Sidebar({ documents, selectedId, onSelect, onUploaded, o
       className="flex flex-col gap-5 p-4 h-full overflow-y-auto">
 
       {/* Logo */}
-      <div style={{ fontFamily: "var(--font-playfair), serif", fontSize: "22px", color: "var(--m-dark)", letterSpacing: "-0.3px", paddingBottom: "4px" }}>
-        Docu<span style={{ color: "var(--m-primary)" }}>Zen</span>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", paddingBottom: "4px" }}>
+        {/* SVG document icon */}
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="var(--m-primary)" />
+          <path d="M10 8h8l5 5v11a1 1 0 0 1-1 1H10a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.6)" strokeWidth="1" />
+          <path d="M18 8v5h5" stroke="rgba(255,255,255,0.6)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+          <line x1="12" y1="16" x2="20" y2="16" stroke="rgba(255,255,255,0.8)" strokeWidth="1.2" strokeLinecap="round" />
+          <line x1="12" y1="19" x2="20" y2="19" stroke="rgba(255,255,255,0.8)" strokeWidth="1.2" strokeLinecap="round" />
+          <line x1="12" y1="22" x2="17" y2="22" stroke="rgba(255,255,255,0.5)" strokeWidth="1.2" strokeLinecap="round" />
+        </svg>
+        <span style={{ fontFamily: "var(--font-playfair), serif", fontSize: "20px", color: "var(--m-dark)", letterSpacing: "-0.3px" }}>
+          Docu<span style={{ color: "var(--m-primary)" }}>Zen</span>
+        </span>
       </div>
 
       {/* Upload */}
