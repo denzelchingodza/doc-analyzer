@@ -9,13 +9,6 @@ class Settings(BaseSettings):
     # PostgreSQL
     database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/docuzen"
 
-    # Qdrant
-    qdrant_host: str = "localhost"
-    qdrant_port: int = 6333
-    qdrant_url: str = ""       # Set for Qdrant Cloud — overrides host/port
-    qdrant_api_key: str = ""   # Qdrant Cloud API key
-    qdrant_collection: str = "documents"
-
     # OpenAI
     openai_api_key: str  # No default — crashes at startup if missing
     embedding_model: str = "text-embedding-3-small"

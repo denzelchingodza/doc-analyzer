@@ -1,4 +1,4 @@
-import uuid
+import uuid  # still used for doc.id and chunk.id
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy import select
@@ -56,8 +56,6 @@ async def upload_document(
         pages = parse_file(file_bytes, file_type)
         chunks = chunk_pages(pages)
 
-        vector_ids = [str(uuid.uuid4()) for _ in chunks]
-
         db_chunks = [
             Chunk(
                 id=str(uuid.uuid4()),
@@ -65,14 +63,13 @@ async def upload_document(
                 content=chunk.content,
                 page_number=chunk.page_number,
                 chunk_index=chunk.chunk_index,
-                vector_id=vector_ids[i],
             )
-            for i, chunk in enumerate(chunks)
+            for chunk in chunks
         ]
         db.add_all(db_chunks)
         await db.commit()
 
-        await store_chunks(doc.id, chunks, vector_ids)
+        await store_chunks(db, doc.id, chunks)
 
         doc.status = "ready"
         await db.commit()

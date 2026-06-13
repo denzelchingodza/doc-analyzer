@@ -5,17 +5,13 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import create_tables
-from app.vector_store import ensure_collection
 from app.routers import documents, chat
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
-    await create_tables()
-    await ensure_collection()
+    await create_tables()  # enables pgvector + creates all tables
     yield
-    # Shutdown (nothing needed yet)
 
 
 app = FastAPI(
