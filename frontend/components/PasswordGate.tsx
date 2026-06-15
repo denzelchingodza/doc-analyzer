@@ -1,22 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const SESSION_KEY = "docuzen_auth";
 const PASSWORD = process.env.NEXT_PUBLIC_APP_PASSWORD ?? "";
 
 export default function PasswordGate({ children }: { children: React.ReactNode }) {
-  const [unlocked, setUnlocked] = useState(false);
+  const [unlocked, setUnlocked] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return sessionStorage.getItem(SESSION_KEY) === "1";
+  });
   const [input, setInput] = useState("");
   const [error, setError] = useState(false);
-  const [checking, setChecking] = useState(true);
-
-  useEffect(() => {
-    if (sessionStorage.getItem(SESSION_KEY) === "1") {
-      setUnlocked(true);
-    }
-    setChecking(false);
-  }, []);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,7 +24,6 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
     }
   }
 
-  if (checking) return null;
   if (unlocked) return <>{children}</>;
 
   return (
