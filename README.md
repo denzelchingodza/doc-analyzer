@@ -68,6 +68,8 @@ The live app at `/app` is password-protected to keep OpenAI costs in check. Set 
 
 The lock screen sits over a blurred preview of the app so visitors know what they're walking into.
 
+**Password:** `docuzen2026`
+
 ---
 
 ## Running locally
