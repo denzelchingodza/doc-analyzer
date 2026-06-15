@@ -66,7 +66,7 @@ DocuZen uses a RAG pipeline under the hood:
 
 The live app at `/app` is password-protected to keep OpenAI costs in check. Set `NEXT_PUBLIC_APP_PASSWORD` as an environment variable on Netlify (or in `.env.local` locally) to configure the password. If the env var is unset, the gate is bypassed — useful during local development.
 
-The lock screen shows a blurred preview of the app behind it so visitors know what they're walking into. 🔐
+The lock screen sits over a blurred preview of the app so visitors know what they're walking into.
 
 ---
 

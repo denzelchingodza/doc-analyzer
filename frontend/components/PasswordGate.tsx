@@ -40,7 +40,11 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
           80%       { transform: translateX(6px); }
         }
         .shake { animation: shake 0.45s ease; }
-        .gate-input:focus { border-color: #6b7c3f !important; outline: none; }
+        .gate-input:focus {
+          border-color: #6b7c3f !important;
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(74, 92, 47, 0.25);
+        }
         .gate-btn:hover { background: #5a6e39 !important; }
       `}</style>
 
@@ -48,7 +52,7 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
       <div style={{
         position: "fixed",
         inset: 0,
-        filter: "blur(12px) brightness(0.4)",
+        filter: "blur(12px) brightness(0.35)",
         pointerEvents: "none",
         userSelect: "none",
         transform: "scale(1.05)",
@@ -69,34 +73,46 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
         <div
           className={shake ? "shake" : ""}
           style={{
-            background: "rgba(20, 22, 30, 0.85)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.08)",
+            background: "rgba(18, 22, 14, 0.82)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+            border: "1px solid rgba(74, 92, 47, 0.35)",
             borderRadius: "16px",
             padding: "44px 48px",
             width: "100%",
             maxWidth: "380px",
             textAlign: "center",
-            boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
+            boxShadow: "0 24px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(74,92,47,0.1)",
           }}
         >
-          {/* Emoji row */}
-          <div style={{ fontSize: "28px", marginBottom: "14px", letterSpacing: "6px" }}>
-            📄🔐✨
+          {/* Logo mark */}
+          <div style={{
+            width: "48px",
+            height: "48px",
+            borderRadius: "12px",
+            background: "linear-gradient(135deg, #4A5C2F, #6b7c3f)",
+            margin: "0 auto 20px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </div>
 
           <h1 style={{
-            color: "#fff",
-            fontSize: "22px",
+            color: "#e8edd8",
+            fontSize: "20px",
             fontWeight: 700,
             margin: "0 0 6px",
             letterSpacing: "-0.3px",
           }}>
             DocuZen
           </h1>
-          <p style={{ color: "#6b7585", fontSize: "13px", margin: "0 0 30px" }}>
-            This app is password protected 🤫
+          <p style={{ color: "#7a8468", fontSize: "13px", margin: "0 0 28px" }}>
+            Enter your password to access the app
           </p>
 
           <form onSubmit={handleSubmit}>
@@ -105,24 +121,24 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
               type="password"
               value={input}
               onChange={(e) => { setInput(e.target.value); setError(false); }}
-              placeholder="Enter password"
+              placeholder="Password"
               autoFocus
               style={{
                 width: "100%",
                 padding: "11px 14px",
                 borderRadius: "9px",
-                border: error ? "1px solid #d9534f" : "1px solid rgba(255,255,255,0.1)",
-                background: "rgba(0,0,0,0.35)",
-                color: "#fff",
+                border: error ? "1px solid #a04040" : "1px solid rgba(74, 92, 47, 0.3)",
+                background: "rgba(74, 92, 47, 0.08)",
+                color: "#e8edd8",
                 fontSize: "15px",
                 boxSizing: "border-box",
                 marginBottom: error ? "8px" : "14px",
-                transition: "border-color 0.2s",
+                transition: "border-color 0.2s, box-shadow 0.2s",
               }}
             />
             {error && (
-              <p style={{ color: "#d9534f", fontSize: "13px", margin: "0 0 14px" }}>
-                Wrong password 🙅
+              <p style={{ color: "#b05555", fontSize: "13px", margin: "0 0 14px" }}>
+                Incorrect password
               </p>
             )}
             <button
@@ -134,7 +150,7 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
                 borderRadius: "9px",
                 border: "none",
                 background: "#4A5C2F",
-                color: "#fff",
+                color: "#e8edd8",
                 fontSize: "15px",
                 fontWeight: 600,
                 cursor: "pointer",
@@ -142,7 +158,7 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
                 letterSpacing: "0.2px",
               }}
             >
-              Let me in 🚀
+              Enter
             </button>
           </form>
         </div>
