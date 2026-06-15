@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import ViewerPanel from "@/components/ViewerPanel";
 import ChatPanel from "@/components/ChatPanel";
+import PasswordGate from "@/components/PasswordGate";
 import { Document } from "@/types";
 import { listDocuments } from "@/lib/api";
 
@@ -26,6 +27,7 @@ export default function AppPage() {
   }
 
   return (
+    <PasswordGate>
     <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
       {/* Sidebar */}
       <div style={{ width: "260px", flexShrink: 0, height: "100vh", overflow: "hidden" }}>
@@ -48,5 +50,6 @@ export default function AppPage() {
         <ChatPanel document={selected} />
       </div>
     </div>
+    </PasswordGate>
   );
 }
