@@ -12,6 +12,7 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
   });
   const [input, setInput] = useState("");
   const [error, setError] = useState(false);
+  const [shake, setShake] = useState(false);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -20,81 +21,132 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
       setUnlocked(true);
     } else {
       setError(true);
+      setShake(true);
       setInput("");
+      setTimeout(() => setShake(false), 500);
     }
   }
 
   if (unlocked) return <>{children}</>;
 
   return (
-    <div style={{
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      background: "#0f1117",
-      fontFamily: "'Inter', sans-serif",
-    }}>
-      <div style={{
-        background: "#1a1d27",
-        border: "1px solid #2a2d3a",
-        borderRadius: "12px",
-        padding: "40px 48px",
-        width: "100%",
-        maxWidth: "380px",
-        textAlign: "center",
-      }}>
-        <div style={{ fontSize: "32px", marginBottom: "8px" }}>🔒</div>
-        <h1 style={{ color: "#fff", fontSize: "20px", fontWeight: 700, margin: "0 0 6px" }}>
-          DocuZen
-        </h1>
-        <p style={{ color: "#8b8fa8", fontSize: "14px", margin: "0 0 28px" }}>
-          Enter the password to continue
-        </p>
+    <>
+      <style>{`
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          20%       { transform: translateX(-8px); }
+          40%       { transform: translateX(8px); }
+          60%       { transform: translateX(-6px); }
+          80%       { transform: translateX(6px); }
+        }
+        .shake { animation: shake 0.45s ease; }
+        .gate-input:focus { border-color: #6b7c3f !important; outline: none; }
+        .gate-btn:hover { background: #5a6e39 !important; }
+      `}</style>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="password"
-            value={input}
-            onChange={(e) => { setInput(e.target.value); setError(false); }}
-            placeholder="Password"
-            autoFocus
-            style={{
-              width: "100%",
-              padding: "10px 14px",
-              borderRadius: "8px",
-              border: error ? "1px solid #e55" : "1px solid #2a2d3a",
-              background: "#0f1117",
-              color: "#fff",
-              fontSize: "15px",
-              outline: "none",
-              boxSizing: "border-box",
-              marginBottom: "12px",
-            }}
-          />
-          {error && (
-            <p style={{ color: "#e55", fontSize: "13px", margin: "0 0 12px" }}>
-              Incorrect password
-            </p>
-          )}
-          <button
-            type="submit"
-            style={{
-              width: "100%",
-              padding: "10px",
-              borderRadius: "8px",
-              border: "none",
-              background: "#4A5C2F",
-              color: "#fff",
-              fontSize: "15px",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            Enter
-          </button>
-        </form>
+      {/* Blurred app behind the gate */}
+      <div style={{
+        position: "fixed",
+        inset: 0,
+        filter: "blur(12px) brightness(0.4)",
+        pointerEvents: "none",
+        userSelect: "none",
+        transform: "scale(1.05)",
+      }}>
+        {children}
       </div>
-    </div>
+
+      {/* Gate overlay */}
+      <div style={{
+        position: "fixed",
+        inset: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "'Inter', -apple-system, sans-serif",
+        zIndex: 50,
+      }}>
+        <div
+          className={shake ? "shake" : ""}
+          style={{
+            background: "rgba(20, 22, 30, 0.85)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: "16px",
+            padding: "44px 48px",
+            width: "100%",
+            maxWidth: "380px",
+            textAlign: "center",
+            boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
+          }}
+        >
+          {/* Emoji row */}
+          <div style={{ fontSize: "28px", marginBottom: "14px", letterSpacing: "6px" }}>
+            📄🔐✨
+          </div>
+
+          <h1 style={{
+            color: "#fff",
+            fontSize: "22px",
+            fontWeight: 700,
+            margin: "0 0 6px",
+            letterSpacing: "-0.3px",
+          }}>
+            DocuZen
+          </h1>
+          <p style={{ color: "#6b7585", fontSize: "13px", margin: "0 0 30px" }}>
+            This app is password protected 🤫
+          </p>
+
+          <form onSubmit={handleSubmit}>
+            <input
+              className="gate-input"
+              type="password"
+              value={input}
+              onChange={(e) => { setInput(e.target.value); setError(false); }}
+              placeholder="Enter password"
+              autoFocus
+              style={{
+                width: "100%",
+                padding: "11px 14px",
+                borderRadius: "9px",
+                border: error ? "1px solid #d9534f" : "1px solid rgba(255,255,255,0.1)",
+                background: "rgba(0,0,0,0.35)",
+                color: "#fff",
+                fontSize: "15px",
+                boxSizing: "border-box",
+                marginBottom: error ? "8px" : "14px",
+                transition: "border-color 0.2s",
+              }}
+            />
+            {error && (
+              <p style={{ color: "#d9534f", fontSize: "13px", margin: "0 0 14px" }}>
+                Wrong password 🙅
+              </p>
+            )}
+            <button
+              className="gate-btn"
+              type="submit"
+              style={{
+                width: "100%",
+                padding: "11px",
+                borderRadius: "9px",
+                border: "none",
+                background: "#4A5C2F",
+                color: "#fff",
+                fontSize: "15px",
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "background 0.2s",
+                letterSpacing: "0.2px",
+              }}
+            >
+              Let me in 🚀
+            </button>
+          </form>
+        </div>
+      </div>
+    </>
   );
 }
