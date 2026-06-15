@@ -80,6 +80,10 @@ export default function LandingPage() {
             How it works
           </a>
         </div>
+
+        <p style={{ marginTop: "20px", fontSize: "13px", color: "#8A9A7A" }}>
+          App is password protected — password: <span style={{ color: "#4A5C2F", fontWeight: 600, fontFamily: "monospace" }}>docuzen2026</span>
+        </p>
       </section>
 
       {/* How it works */}
