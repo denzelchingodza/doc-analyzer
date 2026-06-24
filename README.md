@@ -4,7 +4,7 @@
 
 ![DocuZen landing page](docs/screenshot.png)
 
-**Live:** [docuzen.netlify.app](https://doc-analyzer-as5k.vercel.app/) &nbsp;·&nbsp; **Repo:** [github.com/denz-os/doc-analyzer](https://github.com/denz-os/doc-analyzer)
+**Live:** [doc-analyzer-as5k.vercel.app](https://doc-analyzer-as5k.vercel.app/) &nbsp;·&nbsp; **Repo:** [github.com/denz-os/doc-analyzer](https://github.com/denz-os/doc-analyzer)
 
 ---
 
@@ -52,9 +52,9 @@ DocuZen uses a RAG pipeline under the hood:
 - [tiktoken](https://github.com/openai/tiktoken) — token-aware chunking with overlap
 
 **Frontend**
-- [Next.js 15](https://nextjs.org/) (App Router, TypeScript, static export)
+- [Next.js 15](https://nextjs.org/) (App Router, TypeScript)
 - [Tailwind CSS](https://tailwindcss.com/)
-- Deployed on [Netlify](https://netlify.com)
+- Deployed on [Vercel](https://vercel.com)
 
 **Infrastructure**
 - [Neon](https://neon.tech) — free serverless Postgres with pgvector
