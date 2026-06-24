@@ -4,7 +4,7 @@
 
 ![DocuZen landing page](docs/screenshot.png)
 
-**Live:** [docuzen.netlify.app](https://docuzen.netlify.app) &nbsp;·&nbsp; **Repo:** [github.com/denz-os/doc-analyzer](https://github.com/denz-os/doc-analyzer)
+**Live:** [docuzen.netlify.app](https://doc-analyzer-as5k.vercel.app/) &nbsp;·&nbsp; **Repo:** [github.com/denz-os/doc-analyzer](https://github.com/denz-os/doc-analyzer)
 
 ---
 
