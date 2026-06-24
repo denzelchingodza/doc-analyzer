@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
-import ViewerPanel from "@/components/ViewerPanel";
-import ChatPanel from "@/components/ChatPanel";
+import MainPanel from "@/components/MainPanel";
 import PasswordGate from "@/components/PasswordGate";
 import { Document } from "@/types";
 import { listDocuments } from "@/lib/api";
@@ -28,28 +27,23 @@ export default function AppPage() {
 
   return (
     <PasswordGate>
-    <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
-      {/* Sidebar */}
-      <div style={{ width: "260px", flexShrink: 0, height: "100vh", overflow: "hidden" }}>
-        <Sidebar
-          documents={documents}
-          selectedId={selected?.id ?? null}
-          onSelect={setSelected}
-          onUploaded={handleUploaded}
-          onDeleted={handleDeleted}
-        />
-      </div>
+      <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+        {/* Sidebar */}
+        <div style={{ width: "260px", flexShrink: 0, height: "100vh", overflow: "hidden" }}>
+          <Sidebar
+            documents={documents}
+            selectedId={selected?.id ?? null}
+            onSelect={setSelected}
+            onUploaded={handleUploaded}
+            onDeleted={handleDeleted}
+          />
+        </div>
 
-      {/* Viewer */}
-      <div style={{ flex: 1, minWidth: 0, height: "100vh", overflow: "hidden" }}>
-        <ViewerPanel document={selected} />
+        {/* Main — Chat + Document tabs */}
+        <div style={{ flex: 1, minWidth: 0, height: "100vh", overflow: "hidden" }}>
+          <MainPanel document={selected} />
+        </div>
       </div>
-
-      {/* Chat — wider for readability */}
-      <div style={{ width: "440px", flexShrink: 0, height: "100vh", overflow: "hidden", borderLeft: "1px solid var(--m-border)" }}>
-        <ChatPanel document={selected} />
-      </div>
-    </div>
     </PasswordGate>
   );
 }
