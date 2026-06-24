@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     allowed_origins: list[str] = [
         "http://localhost:3000",
         "https://docuzen.netlify.app",
+        "https://doc-analyzer-as5k.vercel.app",
+        "https://doc-analyzer-git-main-denzel2.vercel.app",
     ]
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
