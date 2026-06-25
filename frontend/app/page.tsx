@@ -7,7 +7,7 @@ export default function LandingPage() {
     <div style={{ fontFamily: "var(--font-inter), sans-serif", background: "#F2F4EE", minHeight: "100vh", color: "#1A2410" }}>
 
       {/* Nav */}
-      <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 48px", borderBottom: "1px solid #D6DCCA", background: "#F2F4EE" }}>
+      <nav className="nav-bar" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "18px 48px", borderBottom: "1px solid #D6DCCA", background: "#F2F4EE" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="32" height="32" rx="7" fill="#4A5C2F" />
@@ -31,7 +31,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section style={{ maxWidth: "800px", margin: "0 auto", padding: "96px 48px 72px", textAlign: "center" }}>
+      <section className="hero-section" style={{ maxWidth: "800px", margin: "0 auto", padding: "96px 48px 72px", textAlign: "center" }}>
         <p style={{ fontSize: "12px", color: "#7A8E6A", letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 500, marginBottom: "24px" }}>
           AI document intelligence
         </p>
@@ -53,7 +53,7 @@ export default function LandingPage() {
           Upload any PDF or Word document and have a real conversation with it. DocuZen finds the exact passages that matter, with page citations.
         </p>
 
-        <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+        <div className="cta-btns" style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
           <Link href="/app" style={{
             background: "#4A5C2F", color: "#fff",
             padding: "11px 28px", borderRadius: "6px",
@@ -78,7 +78,7 @@ export default function LandingPage() {
 
       {/* How it works */}
       <section id="how-it-works" style={{ borderTop: "1px solid #D6DCCA" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
+        <div className="steps-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
           {[
             {
               step: "01",
@@ -116,7 +116,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer style={{ background: "#fff", borderTop: "1px solid #D6DCCA", padding: "22px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
+      <footer className="footer-bar" style={{ background: "#fff", borderTop: "1px solid #D6DCCA", padding: "22px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "16px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="32" height="32" rx="7" fill="#4A5C2F" />
