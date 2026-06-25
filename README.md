@@ -1,8 +1,6 @@
 # DocuZen
 
-> AI-powered document intelligence — built while learning, shipped because it's lekker.
-
-![DocuZen landing page](docs/screenshot.png)
+> AI-powered document intelligence, built while learning.
 
 **Live:** [doc-analyzer-as5k.vercel.app](https://doc-analyzer-as5k.vercel.app/) &nbsp;·&nbsp; **Repo:** [github.com/denz-os/doc-analyzer](https://github.com/denz-os/doc-analyzer)
 
@@ -10,9 +8,9 @@
 
 ## What is this?
 
-DocuZen lets you upload any PDF or Word document and have a real conversation with it. Ask a question in plain language, get a direct answer with page references pointing back to exactly where the information came from — no skimming, no guessing.
+DocuZen lets you upload any PDF or Word document and have a real conversation with it. Ask a question in plain language, get a direct answer with page references pointing back to exactly where the information came from no skimming, no guessing.
 
-I built this as part of my ongoing journey learning about AI systems — specifically RAG (Retrieval-Augmented Generation) pipelines, vector databases, and how to wire them up into something actually usable. It's been a genuinely fun project to put together and I'm still adding to it as I go deeper into the space.
+I built this as part of my ongoing journey learning about AI systems specifically RAG (Retrieval-Augmented Generation) pipelines, vector databases, and how to wire them up into something actually usable. It's been a genuinely fun project to put together and I'm still adding to it as I go deeper into the space.
 
 ---
 
