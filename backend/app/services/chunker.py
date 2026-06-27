@@ -14,7 +14,7 @@ class TextChunk:
 
 
 def chunk_pages(pages: list[ParsedPage]) -> list[TextChunk]:
-    enc = tiktoken.get_encoding("cl100k_base")
+    enc = tiktoken.get_encoding("cl100k_base") #This turns the text into a list of numbers
     chunks = []
     chunk_index = 0
 
@@ -25,11 +25,11 @@ def chunk_pages(pages: list[ParsedPage]) -> list[TextChunk]:
         while start < len(tokens):
             end = start + settings.chunk_size
             chunk_tokens = tokens[start:end]
-            content = enc.decode(chunk_tokens)
+            content = enc.decode(chunk_tokens) #this will turn the tokens back into text
 
             chunks.append(TextChunk(
-                content=content,
-                page_number=page.page_number,
+                content=content, #the actual text
+                page_number=page.page_number, #tells us which page it came from
                 chunk_index=chunk_index,
             ))
             chunk_index += 1

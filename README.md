@@ -20,7 +20,7 @@ I built this as part of my ongoing journey learning about AI systems specificall
 - Automatic parsing, chunking, and vector embedding on upload
 - Natural language Q&A grounded in the actual document content
 - Answers include page-level citations and similarity scores
-- Clean split-panel interface — sidebar, viewer, and chat side by side
+- Clean split-panel interface: sidebar, viewer, and chat side by side
 - Military-green themed UI built with Next.js and Tailwind
 - Password-gated app with a glassmorphism lock screen (blurred app preview behind it)
 
@@ -30,24 +30,24 @@ I built this as part of my ongoing journey learning about AI systems specificall
 
 DocuZen uses a RAG pipeline under the hood:
 
-1. **Ingest** — PyMuPDF / python-docx extract raw text with page numbers
-2. **Chunk** — tiktoken splits text into overlapping token windows
-3. **Embed** — OpenAI `text-embedding-3-small` converts each chunk to a vector
-4. **Store** — vectors go into PostgreSQL via pgvector (no separate vector DB needed)
-5. **Query** — at question time, the query is embedded, top-k chunks are retrieved via cosine similarity, and GPT-4o-mini synthesises a grounded answer
+1. **Ingest:** PyMuPDF / python-docx extract raw text with page numbers
+2. **Chunk:** tiktoken splits text into overlapping token windows
+3. **Embed:** OpenAI `text-embedding-3-small` converts each chunk to a vector
+4. **Store:** vectors go into PostgreSQL via pgvector (no separate vector DB needed)
+5. **Query:** the query is embedded, the top matching chunks are retrieved by similarity, and GPT-4o-mini generates a grounded answer
 
 ---
 
 ## Tech stack
 
 **Backend**
-- [FastAPI](https://fastapi.tiangolo.com/) — async Python API
-- [PostgreSQL](https://www.postgresql.org/) + [pgvector](https://github.com/pgvector/pgvector) — chunks, metadata, and vector search in one database
-- [SQLAlchemy](https://www.sqlalchemy.org/) — async ORM with pgvector cosine distance queries
-- [OpenAI](https://platform.openai.com/) — embeddings (`text-embedding-3-small`) + answers (`gpt-4o-mini`)
-- [PyMuPDF](https://pymupdf.readthedocs.io/) — PDF extraction with page numbers
-- [python-docx](https://python-docx.readthedocs.io/) — Word document parsing
-- [tiktoken](https://github.com/openai/tiktoken) — token-aware chunking with overlap
+- [FastAPI](https://fastapi.tiangolo.com/) for the async Python API
+- [PostgreSQL](https://www.postgresql.org/) + [pgvector](https://github.com/pgvector/pgvector) for storing chunks, metadata, and running vector search in one database
+- [SQLAlchemy](https://www.sqlalchemy.org/) as the async ORM with pgvector distance queries
+- [OpenAI](https://platform.openai.com/) for embeddings (`text-embedding-3-small`) and answers (`gpt-4o-mini`)
+- [PyMuPDF](https://pymupdf.readthedocs.io/) for PDF extraction with page numbers
+- [python-docx](https://python-docx.readthedocs.io/) for Word document parsing
+- [tiktoken](https://github.com/openai/tiktoken) for token-aware chunking with overlap
 
 **Frontend**
 - [Next.js 15](https://nextjs.org/) (App Router, TypeScript)
@@ -126,4 +126,4 @@ doc-analyzer/
 
 ## About
 
-Built by [Denzel Chingodza](https://denzos-platform.netlify.app) — a developer based in South Africa, actively learning and building in the AI space. DocuZen started as a way to properly understand RAG pipelines and turned into something I'm actually proud to ship. Still a work in progress, more features coming.
+Built by [Denzel Chingodza](https://denzos-platform.netlify.app), a developer based in South Africa, actively learning and building in the AI space. DocuZen started as a way to understand how AI document tools work and turned into something I'm actually proud to ship. Still a work in progress, more features coming.

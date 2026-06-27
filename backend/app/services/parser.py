@@ -3,16 +3,16 @@ from dataclasses import dataclass
 import fitz  # PyMuPDF
 from docx import Document as DocxDocument
 
-
-@dataclass
+#every function in this file returns a list of these objects
+@dataclass 
 class ParsedPage:
     page_number: int
     text: str
 
-
-def parse_pdf(file_bytes: bytes) -> list[ParsedPage]:
+#this function receives file_bytes. The raw binary content of the uploaded PDF and then it returns a list of parsed pages
+def parse_pdf(file_bytes: bytes) -> list[ParsedPage]: 
     pages = []
-    with fitz.open(stream=file_bytes, filetype="pdf") as doc:
+    with fitz.open(stream=file_bytes, filetype="pdf") as doc: #fitz is PyMuPDF. The pdf is opened from memory not disk. 
         for page_num, page in enumerate(doc, start=1):
             text = page.get_text().strip()
             if text:
@@ -20,7 +20,7 @@ def parse_pdf(file_bytes: bytes) -> list[ParsedPage]:
     return pages
 
 
-def parse_docx(file_bytes: bytes) -> list[ParsedPage]:
+def parse_docx(file_bytes: bytes) -> list[ParsedPage]: #
     import io
     doc = DocxDocument(io.BytesIO(file_bytes))
     pages = []
@@ -45,7 +45,7 @@ def parse_docx(file_bytes: bytes) -> list[ParsedPage]:
 
     return pages
 
-
+#the dispatcher function in the case an individual does not upload a PDF or Word Document
 def parse_file(file_bytes: bytes, file_type: str) -> list[ParsedPage]:
     if file_type == "pdf":
         return parse_pdf(file_bytes)
