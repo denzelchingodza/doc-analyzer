@@ -124,6 +124,28 @@ doc-analyzer/
 
 ---
 
+## ML concepts at work
+
+DocuZen is a practical application of the core ML pipeline: data collection, modelling, and deployment. Here's how the theory maps to what this project actually does, using the [6-step ML framework](https://dev.mrdbourke.com/zero-to-mastery-ml/a-6-step-framework-for-approaching-machine-learning-projects/) as a reference.
+
+**Problem definition.** A classic information retrieval problem rephrased as ML: given a user query and a large unstructured text corpus (a document), find the most semantically relevant passages and generate a grounded answer. This falls under transfer learning — we use pre-trained models rather than training from scratch.
+
+**Data.** Documents are unstructured data. PDFs and Word files are not immediately row-and-column ready. The ingestion pipeline converts them into structured chunks with metadata (page number, position, token count) that a model can work with.
+
+**Features.** Raw text is not a feature a model can consume directly. tiktoken chunks the text into overlapping token windows. OpenAI's `text-embedding-3-small` converts each chunk into a 1536-dimension vector — that vector is the feature. pgvector stores and indexes these features for similarity search.
+
+**Evaluation.** Similarity scores (cosine distance between query vector and chunk vectors) are the evaluation metric. Every answer surfaces the top-k chunks and their similarity scores so you can see how confident the retrieval was. Lower distance = stronger match.
+
+**Modelling.** Two models in the pipeline: an embedding model for retrieval (`text-embedding-3-small`) and a generation model for answering (`gpt-4o-mini`). The retrieval step is unsupervised (find similar vectors). The generation step takes the retrieved context and the query as input and produces the answer — grounded, not hallucinated.
+
+**Experimentation.** Chunk size, overlap, top-k retrieval count, and the generation prompt are all tunable. Changing chunk size changes what counts as a "feature". Changing top-k changes how much context the generation model sees. These are the hyperparameters of this RAG pipeline.
+
+---
+
 ## About
 
-Built by [Denzel Chingodza](https://denzos-platform.netlify.app), a developer based in South Africa, actively learning and building in the AI space. DocuZen started as a way to understand how AI document tools work and turned into something I'm actually proud to ship. Still a work in progress, more features coming.
+Built by [Denzel Chingodza](https://denz-platform.vercel.app) — BSc Software Engineering student based in South Africa, learning and building in the NLP and AI space. DocuZen started as a way to understand how RAG pipelines actually work under the hood and turned into something worth shipping. Still a work in progress.
+
+- GitHub: [github.com/denzelchingodza](https://github.com/denzelchingodza)
+- LinkedIn: [linkedin.com/in/denzel-chingodza-45b6ab3a0](https://www.linkedin.com/in/denzel-chingodza-45b6ab3a0/)
+- Portfolio: [denz-platform.vercel.app](https://denz-platform.vercel.app)
