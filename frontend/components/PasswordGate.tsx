@@ -16,6 +16,7 @@ export default function PasswordGate({ children }: { children: React.ReactNode }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!input.trim()) return;          // block empty Enter
     if (!PASSWORD || input === PASSWORD) {
       sessionStorage.setItem(SESSION_KEY, "1");
       setUnlocked(true);

@@ -64,9 +64,6 @@ export default function LandingPage() {
           </a>
         </div>
 
-        <p style={{ marginTop: "18px", fontSize: "12px", color: "#9AAA8A" }}>
-          Password protected · <span style={{ fontFamily: "monospace", color: "#5A6E4A" }}>docuzen2026</span>
-        </p>
       </section>
 
       {/* Steps */}
