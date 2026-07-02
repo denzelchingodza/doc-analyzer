@@ -54,34 +54,10 @@ export default function LandingPage() {
           }}>
             Open DocuZen
           </Link>
-          <a href="#about" style={{
-            background: "transparent", color: "#4A5C2F",
-            padding: "11px 28px", borderRadius: "6px",
-            fontSize: "15px", fontWeight: 500, textDecoration: "none",
-            border: "1px solid #C8D4B8",
-          }}>
-            How it works
-          </a>
         </div>
 
       </section>
 
-      {/* Steps */}
-      <section id="about" style={{ borderTop: "1px solid #DDD6C8", background: "#EDE6D8", padding: "48px 64px 52px" }}>
-        {[
-          { n: "01", title: "Upload your document", body: "PDF or Word file, up to 50MB. It gets read and indexed in the background." },
-          { n: "02", title: "Ask anything",          body: "Type your question in plain English. No commands, no syntax." },
-          { n: "03", title: "Get a sourced answer",  body: "Every answer includes the page it came from so you can verify it yourself." },
-        ].map((s) => (
-          <div key={s.n} style={{ display: "flex", alignItems: "flex-start", gap: "20px", marginBottom: "32px" }}>
-            <span style={{ fontSize: "12px", color: "#B0BFA0", fontWeight: 500, minWidth: "24px", paddingTop: "2px" }}>{s.n}</span>
-            <div>
-              <strong style={{ fontSize: "15px", fontWeight: 500, color: "#2E3A1C", display: "block", marginBottom: "4px" }}>{s.title}</strong>
-              <p style={{ fontSize: "14px", color: "#6A7A5A", lineHeight: 1.7, margin: 0 }}>{s.body}</p>
-            </div>
-          </div>
-        ))}
-      </section>
 
       {/* Footer */}
       <footer style={{ background: "#EDE6D8", borderTop: "1px solid #DDD6C8", padding: "40px 48px 24px" }}>
