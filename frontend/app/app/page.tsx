@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import MainPanel from "@/components/MainPanel";
-import PasswordGate from "@/components/PasswordGate";
 import { Document } from "@/types";
 import { listDocuments } from "@/lib/api";
 
@@ -35,8 +34,7 @@ export default function AppPage() {
   }
 
   return (
-    <PasswordGate>
-      <div style={{ display: "flex", height: "100vh", overflow: "hidden", position: "relative" }}>
+    <div style={{ display: "flex", height: "100vh", overflow: "hidden", position: "relative" }}>
 
         {/* Overlay — mobile only */}
         {sidebarOpen && (
@@ -102,6 +100,6 @@ export default function AppPage() {
           </div>
         </div>
       </div>
-    </PasswordGate>
+    </div>
   );
 }

@@ -22,7 +22,7 @@ I built this as part of my ongoing journey learning about AI systems specificall
 - Answers include page-level citations and similarity scores
 - Clean split-panel interface: sidebar, viewer, and chat side by side
 - Military-green themed UI built with Next.js and Tailwind
-- Password-gated app with a glassmorphism lock screen (blurred app preview behind it)
+- Rate-limited backend (60 requests/hour per IP) to keep OpenAI costs in check
 
 ---
 
@@ -57,16 +57,6 @@ DocuZen uses a RAG pipeline under the hood:
 **Infrastructure**
 - [Neon](https://neon.tech) — free serverless Postgres with pgvector
 - [Render](https://render.com) — free Docker-based backend hosting
-
----
-
-## Access
-
-The live app at `/app` is password-protected to keep OpenAI costs in check. Set `NEXT_PUBLIC_APP_PASSWORD` as an environment variable on Netlify (or in `.env.local` locally) to configure the password. If the env var is unset, the gate is bypassed — useful during local development.
-
-The lock screen sits over a blurred preview of the app so visitors know what they're walking into.
-
-**Password:** `docuzen2026`
 
 ---
 
