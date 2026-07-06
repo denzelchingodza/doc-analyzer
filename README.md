@@ -1,9 +1,6 @@
 # DocuZen
 
 > AI-powered document intelligence, built while learning.
-
-**Live:** [doc-analyzer-as5k.vercel.app](https://doc-analyzer-as5k.vercel.app/) &nbsp;·&nbsp; **Repo:** [github.com/denz-os/doc-analyzer](https://github.com/denz-os/doc-analyzer)
-
 ---
 
 ## What is this?
