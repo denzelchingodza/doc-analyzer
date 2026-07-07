@@ -26,6 +26,14 @@ async def upload_document(
     file: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
 ):
+    # Enforce 1-document limit to control costs
+    existing = await db.execute(select(Document))
+    if existing.scalars().first():
+        raise HTTPException(
+            status_code=400,
+            detail="A document is already uploaded. Delete it before uploading a new one.",
+        )
+
     # Validate type
     if file.content_type not in ALLOWED_TYPES:
         raise HTTPException(status_code=400, detail="Only PDF and DOCX files are supported.")
