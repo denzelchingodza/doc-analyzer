@@ -1,0 +1,62 @@
+[
+  {
+    "id": "q1",
+    "question": "What is the central research question of this paper?",
+    "expected_keywords": ["suitable", "database mesh", "distributed state", "event driven microservices"],
+    "min_keyword_score": 0.75
+  },
+  {
+    "id": "q2",
+    "question": "How many peer-reviewed studies were included in the final review?",
+    "expected_keywords": ["nine", "9"],
+    "min_keyword_score": 0.5
+  },
+  {
+    "id": "q3",
+    "question": "What are the four principles of the data mesh?",
+    "expected_keywords": ["domain ownership", "data as a product", "self-serve", "federated"],
+    "min_keyword_score": 0.75
+  },
+  {
+    "id": "q4",
+    "question": "What review methodology and framework does this paper follow?",
+    "expected_keywords": ["systematic literature review", "PRISMA"],
+    "min_keyword_score": 1.0
+  },
+  {
+    "id": "q5",
+    "question": "Which principle is most frequently cited in the database mesh literature and how often does it appear?",
+    "expected_keywords": ["domain-oriented data ownership", "80%"],
+    "min_keyword_score": 0.5
+  },
+  {
+    "id": "q6",
+    "question": "What weakness does Pereira et al. identify in the standard saga pattern?",
+    "expected_keywords": ["isolation", "dirty reads", "lost updates", "concurrent"],
+    "min_keyword_score": 0.5
+  },
+  {
+    "id": "q7",
+    "question": "Which companies are used as case studies for polyglot persistence?",
+    "expected_keywords": ["Netflix", "Uber", "Shopify"],
+    "min_keyword_score": 0.67
+  },
+  {
+    "id": "q8",
+    "question": "What percentage of microservice applications require strong consistency guarantees across multiple databases?",
+    "expected_keywords": ["14.7"],
+    "min_keyword_score": 1.0
+  },
+  {
+    "id": "q9",
+    "question": "What research gaps does the paper identify?",
+    "expected_keywords": ["longitudinal", "benchmarking", "tooling", "POPIA"],
+    "min_keyword_score": 0.75
+  },
+  {
+    "id": "q10",
+    "question": "What is the target journal for submission and why was it chosen?",
+    "expected_keywords": ["IEEE Transactions on Services Computing", "microservices", "distributed"],
+    "min_keyword_score": 0.67
+  }
+]
