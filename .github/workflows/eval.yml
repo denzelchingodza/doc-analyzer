@@ -1,14 +1,10 @@
 name: DocuZen Eval
 
-# Runs on every pull request and every push to main.
-# If the scorer exits 1 (quality below threshold), the build fails
-# and the PR cannot be merged until the regression is fixed.
+# Runs manually only. Trigger from the Actions tab when you want to run a quality check.
+# This avoids burning OpenAI tokens on every push.
 
 on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   eval:
