@@ -4,8 +4,6 @@ Upload a PDF or Word doc. Ask it questions. Get answers with page references.
 
 Built to understand how RAG pipelines work under the hood and turned into something worth shipping.
 
-**Live:** [docuzen.vercel.app](https://docuzen.vercel.app) &nbsp;|&nbsp; **Backend:** Render &nbsp;|&nbsp; **Frontend:** Vercel
-
 ---
 
 ## How it works
