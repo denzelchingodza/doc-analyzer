@@ -1,0 +1,37 @@
+name: DocuZen Eval
+
+# Runs on every pull request and every push to main.
+# If the scorer exits 1 (quality below threshold), the build fails
+# and the PR cannot be merged until the regression is fixed.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  eval:
+    name: Regression eval
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run eval scorer
+        env:
+          # Set this secret in GitHub → Settings → Secrets → Actions
+          # Value should be your deployed Render backend URL
+          # e.g. https://docuzen-backend.onrender.com
+          DOCUZEN_API_URL: ${{ secrets.DOCUZEN_API_URL }}
+          EVAL_THRESHOLD: "0.75"
+        run: python evals/scorer.py
