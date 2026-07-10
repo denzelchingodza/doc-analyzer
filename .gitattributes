@@ -1,0 +1,5 @@
+frontend/**/*.ts linguist-vendored
+frontend/**/*.tsx linguist-vendored
+frontend/**/*.css linguist-vendored
+frontend/**/*.js linguist-vendored
+frontend/**/*.mjs linguist-vendored
