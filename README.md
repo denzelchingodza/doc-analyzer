@@ -114,7 +114,7 @@ await conn.run_sync(Base.metadata.create_all)
 
 **Started with Qdrant, migrated to pgvector**
 
-The first version used a separate Qdrant instance as the vector store (`vector_store.py` still exists in the codebase as a remnant). Managing two separate services on Render's free tier — one for the API and one for Qdrant — added cold start latency and deployment complexity. Migrated vectors into the same PostgreSQL database using pgvector. One fewer service, one fewer failure point.
+The first version used a separate Qdrant instance as the vector store (`vector_store.py` still exists in the codebase as a remnant). Managing two separate services on Render's free tier one for the API and one for Qdrant added cold start latency and deployment complexity. Migrated vectors into the same PostgreSQL database using pgvector. One fewer service, one fewer failure point.
 
 **OpenAI API costs during development**
 
@@ -122,7 +122,7 @@ Without rate limiting, hitting the `/query` endpoint repeatedly during testing r
 
 **CORS blocking the frontend**
 
-The Next.js frontend on Vercel (different origin) was blocked by the browser's same-origin policy. Added `CORSMiddleware` with explicit allowed origins read from the environment, so local dev (`localhost:3000`) and production (`vercel.app`) both work without opening CORS to `*`.
+The Next.js frontend on Vercel (different origin) was blocked by the browser's same origin policy. Added `CORSMiddleware` with explicit allowed origins read from the environment, so local dev (`localhost:3000`) and production (`vercel.app`) both work without opening CORS to `*`.
 
 ---
 
