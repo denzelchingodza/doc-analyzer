@@ -87,3 +87,52 @@ I also built rate limiting and CORS restrictions in from the start, which was th
 
 ---
 
+## What broke and how I fixed it
+
+**asyncpg rejecting the database URL**
+
+Cloud PostgreSQL providers (Neon, Supabase) append `?sslmode=require&channel_binding=disable` to connection strings. asyncpg does not accept these as URL parameters — it throws `invalid dsn` on startup. Fixed by writing a URL sanitiser that strips those params before passing the URL to `create_async_engine`, then enables SSL separately via `connect_args`:
+
+```python
+def _build_engine_url(raw_url: str):
+    params = parse_qs(parsed.query)
+    params.pop("sslmode", None)
+    params.pop("channel_binding", None)
+    ...
+
+engine = create_async_engine(_db_url, connect_args={"ssl": True})
+```
+
+**pgvector extension not installed before table creation**
+
+SQLAlchemy's `Base.metadata.create_all` fails if the `vector` column type doesn't exist yet. The pgvector extension has to be created first. Fixed by running `CREATE EXTENSION IF NOT EXISTS vector` explicitly inside `create_tables()` before the metadata call:
+
+```python
+await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+await conn.run_sync(Base.metadata.create_all)
+```
+
+**Started with Qdrant, migrated to pgvector**
+
+The first version used a separate Qdrant instance as the vector store (`vector_store.py` still exists in the codebase as a remnant). Managing two separate services on Render's free tier — one for the API and one for Qdrant — added cold start latency and deployment complexity. Migrated vectors into the same PostgreSQL database using pgvector. One fewer service, one fewer failure point.
+
+**OpenAI API costs during development**
+
+Without rate limiting, hitting the `/query` endpoint repeatedly during testing ran up OpenAI charges fast. Added `slowapi` middleware with a 60 requests/hour limit per IP. This also means the deployed API can't be scraped or abused by automated tools.
+
+**CORS blocking the frontend**
+
+The Next.js frontend on Vercel (different origin) was blocked by the browser's same-origin policy. Added `CORSMiddleware` with explicit allowed origins read from the environment, so local dev (`localhost:3000`) and production (`vercel.app`) both work without opening CORS to `*`.
+
+---
+
+## Technical notes
+
+- **Async SQLAlchemy** — uses `create_async_engine` with `AsyncSession` and `async_sessionmaker`. All database calls are non-blocking. Pool is configured with `pool_size=10` and `max_overflow=20` to handle concurrent requests on Render's single instance.
+- **Chunking strategy** — documents are split into overlapping chunks so context isn't lost at chunk boundaries. Each chunk stores its page number so citations can be surfaced in the response.
+- **Vector retrieval** — `Chunk.embedding.cosine_distance(query_vector)` is a pgvector operator that runs the similarity search inside PostgreSQL. No Python-side sorting needed.
+- **Embedding model** — `text-embedding-3-small` is used over `text-embedding-ada-002` for lower cost at comparable quality for retrieval tasks.
+- **Lifespan handler** — `create_tables()` runs inside FastAPI's `asynccontextmanager` lifespan so it executes once at startup, not on every request.
+
+---
+
