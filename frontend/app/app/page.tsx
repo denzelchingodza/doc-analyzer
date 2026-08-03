@@ -34,7 +34,7 @@ export default function AppPage() {
   }
 
   return (
-    <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "#FAF6F4" }}>
+    <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "#190508" }}>
 
       {sidebarOpen && (
         <div
@@ -42,7 +42,7 @@ export default function AppPage() {
           onClick={() => setSidebarOpen(false)}
           style={{
             display: "none", position: "fixed", inset: 0,
-            background: "rgba(42,8,16,0.35)", zIndex: 99,
+            background: "rgba(0,0,0,0.6)", zIndex: 99,
           }}
         />
       )}
@@ -63,18 +63,18 @@ export default function AppPage() {
         {/* Mobile top bar */}
         <div className="mob-toggle" style={{
           display: "none", alignItems: "center", justifyContent: "space-between",
-          padding: "10px 16px", borderBottom: "1px solid #E2CBCD",
-          background: "#FAF6F4", flexShrink: 0,
+          padding: "10px 16px", borderBottom: "1px solid rgba(255,255,255,0.08)",
+          background: "#2A0810", flexShrink: 0,
         }}>
-          <span style={{ fontSize: 14, fontWeight: 600, color: "#2A0810" }}>
+          <span style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>
             {selected ? selected.filename : "ChunkDoc"}
           </span>
           <button
             onClick={() => setSidebarOpen((v) => !v)}
             style={{
-              background: "none", border: "1px solid #E2CBCD",
+              background: "none", border: "1px solid rgba(201,162,39,0.3)",
               borderRadius: 6, padding: "6px 12px",
-              fontSize: 12, color: "#7B1624", cursor: "pointer",
+              fontSize: 12, color: "#C9A227", cursor: "pointer",
             }}
           >
             {sidebarOpen ? "Close" : "Documents"}
