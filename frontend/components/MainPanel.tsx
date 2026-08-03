@@ -99,96 +99,101 @@ export default function MainPanel({ document, onUpload }: Props) {
   if (!document) {
     return (
       <div
-        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={onDrop}
         style={{
           display: "flex", flexDirection: "column", height: "100%", overflowY: "auto",
-          background: dragOver ? "#6B1A38" : HERO,
-          backgroundImage: PATTERN,
+          background: "#fff",
           alignItems: "center", justifyContent: "center",
-          padding: "48px 32px", textAlign: "center",
-          transition: "background 0.15s",
+          padding: "40px 32px",
         }}
       >
         {uploading ? (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
             <div style={{
               width: 52, height: 52, borderRadius: "50%",
-              border: "3px solid rgba(201,162,39,0.2)", borderTopColor: GOLD,
+              border: "3px solid rgba(89,16,48,0.12)", borderTopColor: HERO,
               animation: "cd-spin 0.85s linear infinite",
             }} />
-            <div>
-              <p style={{ fontSize: "16px", fontWeight: 600, color: "#fff" }}>Processing your document</p>
-              <p style={{ fontSize: "13px", color: WHITE_DIM, marginTop: "6px" }}>This usually takes a few seconds</p>
+            <div style={{ textAlign: "center" }}>
+              <p style={{ fontSize: "16px", fontWeight: 600, color: "#180509" }}>Processing your document</p>
+              <p style={{ fontSize: "13px", color: "#6B3A42", marginTop: "6px" }}>This usually takes a few seconds</p>
             </div>
           </div>
         ) : (
-          <>
-            <p style={{ color: GOLD, fontSize: "10px", fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", marginBottom: "22px" }}>
-              Tygerberg Medical
-            </p>
-            <h1 style={{
-              color: "#fff", fontSize: "clamp(26px, 3.5vw, 38px)", fontWeight: 800,
-              lineHeight: 1.08, letterSpacing: "-1px", marginBottom: "16px",
-            }}>
-              Stop scrolling through<br />hundreds of pages.
-            </h1>
-            <p style={{ color: WHITE_DIM, fontSize: "14px", lineHeight: 1.7, maxWidth: "360px", margin: "0 auto 28px" }}>
-              Upload your lecture notes, clinical guidelines, or research papers.
-              Ask a question. Get the answer with the page number it came from.
+          <div style={{ width: "100%", maxWidth: "480px" }}>
+
+            {/* Heading */}
+            <h2 style={{ fontSize: "22px", fontWeight: 700, color: "#180509", marginBottom: "8px", letterSpacing: "-0.3px" }}>
+              Upload a document to get started
+            </h2>
+            <p style={{ fontSize: "13px", color: "#6B3A42", lineHeight: 1.7, marginBottom: "24px" }}>
+              Lecture notes, clinical guidelines, textbook chapters, past papers.
+              Ask anything and get the answer with the page number it came from.
             </p>
 
-            <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap", marginBottom: "12px" }}>
-              <button
-                onClick={() => inputRef.current?.click()}
-                style={{
-                  background: GOLD, color: "#2C0A10",
-                  border: "none", borderRadius: "7px", padding: "11px 24px",
-                  fontSize: "14px", fontWeight: 700, cursor: "pointer",
-                }}
-              >
-                Upload a document
-              </button>
-            </div>
-
-            <p style={{ color: WHITE_FAINT, fontSize: "11px", letterSpacing: "0.02em", margin: "0 0 40px" }}>
-              {dragOver ? "Drop it to upload" : "PDF and DOCX supported · Max 50 MB · Drop anywhere"}
-            </p>
-
-            {/* Preview card */}
-            <div style={{
-              maxWidth: "420px", width: "100%",
-              background: "rgba(0,0,0,0.22)", border: `1px solid ${BORDER_W}`,
-              borderRadius: "12px", padding: "16px", textAlign: "left",
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", paddingBottom: "12px", borderBottom: `1px solid ${BORDER_W}`, marginBottom: "12px" }}>
-                <div style={{ width: 30, height: 30, background: "rgba(201,162,39,0.14)", borderRadius: "7px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="14" height="14" fill="none" stroke={GOLD} strokeWidth="1.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                  </svg>
-                </div>
-                <div>
-                  <p style={{ color: "#fff", fontSize: "12px", fontWeight: 500, margin: 0 }}>Harrisons_Principles_Ch47.pdf</p>
-                  <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "10px", margin: "2px 0 0" }}>Ready · 4.2 MB</p>
-                </div>
-              </div>
-              <p style={{ color: "rgba(255,255,255,0.42)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 5px" }}>Your question</p>
-              <p style={{ color: "rgba(255,255,255,0.85)", fontSize: "12px", margin: "0 0 10px", lineHeight: 1.5, fontStyle: "italic" }}>
-                {`"What is the first-line treatment for septic shock?"`}
+            {/* Drop zone */}
+            <div
+              onClick={() => inputRef.current?.click()}
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={onDrop}
+              style={{
+                border: `1.5px dashed ${dragOver ? HERO : "#D4B0B6"}`,
+                borderRadius: "10px", padding: "28px 20px",
+                textAlign: "center", cursor: "pointer",
+                background: dragOver ? "rgba(89,16,48,0.04)" : "#FAF5F6",
+                transition: "all 0.15s", marginBottom: "10px",
+              }}
+            >
+              <svg width="22" height="22" fill="none" stroke={dragOver ? HERO : "#C09098"} strokeWidth="1.5" viewBox="0 0 24 24" style={{ margin: "0 auto 8px", display: "block" }}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 16V8m0 0-3 3m3-3 3 3M6.5 19a4.5 4.5 0 0 1 0-9h.5a5 5 0 0 1 9.8-1A4.5 4.5 0 0 1 17.5 19h-11Z" />
+              </svg>
+              <p style={{ fontSize: "13px", fontWeight: 500, color: "#180509", marginBottom: "3px" }}>
+                {dragOver ? "Drop to upload" : "Drop your PDF or DOCX here"}
               </p>
-              <div style={{ background: "rgba(201,162,39,0.07)", border: `1px solid ${BORDER_GOLD}`, borderRadius: "8px", padding: "10px 12px" }}>
-                <p style={{ color: "rgba(255,255,255,0.82)", fontSize: "11px", lineHeight: 1.6, margin: "0 0 7px" }}>
-                  Early goal-directed therapy includes fluid resuscitation with 30 mL/kg crystalloid within 3 hours, vasopressors to maintain MAP ≥65 mmHg...
-                </p>
-                <span style={{ background: "rgba(201,162,39,0.18)", color: GOLD, fontSize: "10px", padding: "2px 8px", borderRadius: "20px", fontWeight: 700 }}>
-                  Page 1247
-                </span>
-              </div>
+              <p style={{ fontSize: "11px", color: "#9B6B72" }}>or click to browse · max 50 MB</p>
             </div>
 
-            {uploadError && <p style={{ fontSize: "12px", color: "#F87171", marginTop: "14px" }}>{uploadError}</p>}
-          </>
+            <button
+              onClick={() => inputRef.current?.click()}
+              style={{
+                width: "100%", background: GOLD, color: "#2C0A10",
+                border: "none", borderRadius: "7px", padding: "11px 0",
+                fontSize: "14px", fontWeight: 700, cursor: "pointer", marginBottom: "24px",
+              }}
+            >
+              Choose a file
+            </button>
+
+            {uploadError && <p style={{ fontSize: "12px", color: "#DC2626", marginBottom: "16px" }}>{uploadError}</p>}
+
+            {/* Divider */}
+            <div style={{ borderTop: "1px solid #E8D5D8", marginBottom: "24px" }} />
+
+            {/* How it works — 3 steps */}
+            <p style={{ fontSize: "10px", fontWeight: 600, color: "#9B6B72", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "14px" }}>
+              How it works
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+              {[
+                { n: "1", title: "Upload", body: "Drop in any PDF or DOCX up to 50 MB." },
+                { n: "2", title: "Ask", body: "Ask anything in plain English. No keywords needed." },
+                { n: "3", title: "Verify", body: "Every answer includes the exact page number it came from." },
+              ].map((s) => (
+                <div key={s.n} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                  <div style={{
+                    width: 26, height: 26, borderRadius: "7px", flexShrink: 0,
+                    background: HERO, display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <span style={{ color: "#fff", fontSize: "12px", fontWeight: 700 }}>{s.n}</span>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: "13px", fontWeight: 600, color: "#180509", marginBottom: "2px" }}>{s.title}</p>
+                    <p style={{ fontSize: "12px", color: "#6B3A42", lineHeight: 1.6 }}>{s.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         <input ref={inputRef} type="file" accept=".pdf,.docx" style={{ display: "none" }}
