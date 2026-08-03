@@ -1,6 +1,6 @@
 # ChunkDoc
 
-A RAG-powered document Q&A system built for medical students at Stellenbosch University's Tygerberg campus.
+A RAG powered document Q&A system built for medical students at Stellenbosch University's Tygerberg campus.
 
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
@@ -8,15 +8,13 @@ A RAG-powered document Q&A system built for medical students at Stellenbosch Uni
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=nextdotjs&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white)
 
-**[Live app](https://doc-analyzer-as5k.vercel.app)**
-
 ---
 
 ## Why this exists
 
-From high school I developed a genuine interest in medicine — not as a path I took, but as a field I respected for its density and the precision it demands. When I started building software, the intersection felt natural.
+From high school I developed a genuine interest in medicine not as a path I took, but as a field I respected for its density and the precision it demands. When I started building software, the intersection felt natural.
 
-Before writing a single line of code, I spoke to friends studying medicine at Tygerberg. The same problem came up in every conversation: finding one specific piece of information inside a 200-page PDF was costing them 30 to 60 minutes, during an already demanding curriculum. Ctrl+F fails on scanned PDFs. General AI models hallucinate dosages and diagnostic criteria. And even when a student found the right paragraph, there was no way to verify it quickly.
+Before writing a single line of code, I spoke to friends studying medicine at Tygerberg. The same problem came up in every conversation: finding one specific piece of information inside a 200 page PDF was costing them 30 to 60 minutes, during an already demanding curriculum. Ctrl+F fails on scanned PDFs. General AI models hallucinate dosages and diagnostic criteria. And even when a student found the right paragraph, there was no way to verify it quickly.
 
 The problem was real and specific. ChunkDoc is the solution I built to address it and to learn, in depth, how production AI systems actually work.
 
@@ -38,7 +36,7 @@ Five students. Same pattern. Information retrieval was taking more time than the
 
 ## What it does
 
-Upload any PDF or DOCX. Ask a question in plain English. Get a direct answer with the exact page number it came from — grounded entirely in your document, with no internet search and no hallucination from general model knowledge.
+Upload any PDF or DOCX. Ask a question in plain English. Get a direct answer with the exact page number it came from grounded entirely in your document, with no internet search and no hallucination from general model knowledge.
 
 ```
 You:        "What is the first-line treatment for septic shock?"
@@ -63,7 +61,7 @@ QUERY RESOLUTION
 Question  →  Embed query  →  Cosine similarity search  →  GPT-4o-mini (grounded)  →  Answer + page citation
 ```
 
-1. The document is parsed page-by-page and split into overlapping text chunks. Overlap prevents context loss at boundaries. Each chunk stores its source page number.
+1. The document is parsed page by page and split into overlapping text chunks. Overlap prevents context loss at boundaries. Each chunk stores its source page number.
 2. Each chunk is embedded with OpenAI's `text-embedding-3-small` and stored as a vector in PostgreSQL via pgvector.
 3. Incoming questions are embedded with the same model and used to retrieve the top-K most similar chunks via `cosine_distance()`.
 4. The retrieved chunks and the question are passed to GPT-4o-mini, which generates an answer grounded strictly in that context.
@@ -80,9 +78,9 @@ Question  →  Embed query  →  Cosine similarity search  →  GPT-4o-mini (gro
 | Async ORM | SQLAlchemy + asyncpg | `create_async_engine`, non-blocking DB ops |
 | Embedding | text-embedding-3-small | OpenAI API · 1536 dimensions |
 | LLM | GPT-4o-mini | OpenAI API · grounded answer generation |
-| Document parsing | pdfplumber + python-docx | Page-boundary metadata preserved |
+| Document parsing | pdfplumber + python docx | Page boundary metadata preserved |
 | Frontend | Next.js 15 (App Router) | Upload UI, chat panel, citation display |
-| Frontend deploy | Vercel | Auto-deploy on git push |
+| Frontend deploy | Vercel | Auto deploy on git push |
 | Backend deploy | Render | Python service + persistent PostgreSQL |
 
 ---
@@ -161,7 +159,7 @@ The first production deployment failed not because of TypeScript but because `re
 
 **RAG is an engineering problem.** Chunk size, overlap percentage, embedding model choice, and the number of retrieved chunks all materially affect answer quality. Each is a deliberate decision, not a default.
 
-**Research before building prevents rework.** Interviewing five students before writing the first function clarified that the problem was grounded accuracy with verifiable citations — not search speed. Without that, the first version would have been a generic summariser.
+**Research before building prevents rework.** Interviewing five students before writing the first function clarified that the problem was grounded accuracy with verifiable citations not search speed. Without that, the first version would have been a generic summariser.
 
 **Deployment is its own discipline.** A system that works locally can fail in production in multiple distinct ways simultaneously. Connection strings, extension availability, environment variables, and CORS are four separate problems with four separate fixes.
 
