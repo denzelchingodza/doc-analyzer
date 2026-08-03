@@ -2,45 +2,76 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ChatMessage, Document } from "@/types";
-import { askQuestion } from "@/lib/api";
+import { askQuestion, uploadDocument } from "@/lib/api";
 
 interface Props {
   document: Document | null;
+  onUpload: (doc: Document) => void;
 }
+
+const M      = "#7B1624";
+const DARK   = "#2A0810";
+const LIGHT  = "#F5ECEE";
+const BORDER = "#E2CBCD";
+const MUTED  = "#A07880";
 
 function formatSize(bytes: number) {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
-
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
-const GREEN = "#4A5C2F";
-const LIGHT = "#EEF2E8";
-const BORDER = "#D6DCCA";
-const DARK  = "#2E3A1C";
-const MID   = "#7A8870";
+const STARTERS = [
+  "What is this document about?",
+  "Summarise the key points",
+  "What are the main findings?",
+  "List the important topics covered",
+];
 
-export default function MainPanel({ document }: Props) {
-  const [tab, setTab]         = useState<"chat" | "doc">("chat");
+export default function MainPanel({ document, onUpload }: Props) {
+  const [tab, setTab]           = useState<"chat" | "doc">("chat");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [input, setInput]     = useState("");
-  const [loading, setLoading] = useState(false);
-  const bottomRef             = useRef<HTMLDivElement>(null);
+  const [input, setInput]       = useState("");
+  const [loading, setLoading]   = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+  const inputRef                = useRef<HTMLInputElement>(null);
+  const bottomRef               = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setMessages([]); setTab("chat"); }, [document?.id]);
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
-  async function handleSend() {
-    if (!input.trim() || !document || loading) return;
-    const question = input.trim();
+  async function handleFile(file: File) {
+    setUploadError(null);
+    setUploading(true);
+    try {
+      const doc = await uploadDocument(file);
+      onUpload(doc);
+    } catch (e: unknown) {
+      setUploadError(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function onDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  }
+
+  async function handleSend(question?: string) {
+    const q = (question ?? input).trim();
+    if (!q || !document || loading) return;
     setInput("");
-    setMessages((prev) => [...prev, { role: "user", content: question }]);
+    setMessages((prev) => [...prev, { role: "user", content: q }]);
     setLoading(true);
     try {
-      const res = await askQuestion(document.id, question);
+      const res = await askQuestion(document.id, q);
       setMessages((prev) => [...prev, { role: "assistant", content: res.answer, sources: res.sources }]);
     } catch (e: unknown) {
       setMessages((prev) => [...prev, { role: "assistant", content: e instanceof Error ? e.message : "Something went wrong." }]);
@@ -49,89 +80,139 @@ export default function MainPanel({ document }: Props) {
     }
   }
 
-  const tabStyle = (active: boolean): React.CSSProperties => ({
-    padding: "14px 22px",
-    fontSize: "13px",
-    fontWeight: 500,
-    cursor: "pointer",
-    border: "none",
-    background: "transparent",
-    borderBottom: `2px solid ${active ? GREEN : "transparent"}`,
-    color: active ? GREEN : "#9CA3AF",
+  const tabBtn = (active: boolean): React.CSSProperties => ({
+    padding: "13px 20px", fontSize: "13px", fontWeight: 500,
+    cursor: "pointer", border: "none", background: "transparent",
+    borderBottom: `2px solid ${active ? M : "transparent"}`,
+    color: active ? M : "#B08A8E",
     transition: "color 0.15s, border-color 0.15s",
   });
 
-  return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#FAFAF8" }}>
-
-      {/* ── Tab bar ── */}
-      <div style={{ display: "flex", alignItems: "center", borderBottom: `1px solid ${BORDER}`, background: "#fff", flexShrink: 0 }}>
-        <button style={tabStyle(tab === "chat")} onClick={() => setTab("chat")}>Chat</button>
-        <button
-          style={{ ...tabStyle(tab === "doc"), opacity: document ? 1 : 0.4, cursor: document ? "pointer" : "default" }}
-          onClick={() => document && setTab("doc")}
-        >
-          Document
-        </button>
-
-        {/* Doc name pill — right side */}
-        {document && (
-          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px", paddingRight: "20px" }}>
-            <span style={{
-              fontSize: "11px", padding: "3px 9px", borderRadius: "20px",
-              background: LIGHT, color: GREEN, border: `1px solid ${BORDER}`, fontWeight: 600,
+  // No document: show centered upload area
+  if (!document) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#FAF6F4", alignItems: "center", justifyContent: "center", padding: "32px" }}>
+        {uploading ? (
+          <div style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
+            <div style={{
+              width: 56, height: 56, borderRadius: "50%",
+              border: `3px solid ${LIGHT}`, borderTopColor: M,
+              animation: "cd-spin 0.85s linear infinite",
+            }} />
+            <div>
+              <p style={{ fontSize: "16px", fontWeight: 600, color: DARK }}>Processing your document</p>
+              <p style={{ fontSize: "13px", color: MUTED, marginTop: "6px" }}>This usually takes a few seconds</p>
+            </div>
+          </div>
+        ) : (
+          <div style={{ width: "100%", maxWidth: "480px", textAlign: "center" }}>
+            <div style={{
+              width: 56, height: 56, borderRadius: "14px",
+              background: LIGHT, display: "flex", alignItems: "center", justifyContent: "center",
+              margin: "0 auto 20px",
             }}>
-              {document.file_type.toUpperCase()}
-            </span>
-            <span style={{ fontSize: "12px", color: MID, maxWidth: "220px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              {document.filename}
-            </span>
+              <svg width="26" height="26" fill="none" stroke={M} strokeWidth="1.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+              </svg>
+            </div>
+            <h2 style={{ fontSize: "20px", fontWeight: 700, color: DARK, marginBottom: "10px" }}>Upload a document to get started</h2>
+            <p style={{ fontSize: "14px", color: MUTED, lineHeight: 1.7, marginBottom: "28px" }}>
+              Lecture notes, clinical guidelines, textbook chapters, past papers. Drop it in and ask anything.
+            </p>
+
+            <div
+              onClick={() => inputRef.current?.click()}
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={onDrop}
+              style={{
+                border: `2px dashed ${dragOver ? M : BORDER}`,
+                borderRadius: "12px", padding: "36px 24px",
+                cursor: "pointer", background: dragOver ? LIGHT : "#fff",
+                transition: "all 0.15s",
+              }}
+            >
+              <svg width="28" height="28" fill="none" stroke={dragOver ? M : MUTED} strokeWidth="1.5" viewBox="0 0 24 24" style={{ margin: "0 auto 12px", display: "block" }}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 16V8m0 0-3 3m3-3 3 3M6.5 19a4.5 4.5 0 0 1 0-9h.5a5 5 0 0 1 9.8-1A4.5 4.5 0 0 1 17.5 19h-11Z" />
+              </svg>
+              <p style={{ fontSize: "14px", fontWeight: 500, color: DARK, marginBottom: "4px" }}>Drop your file here</p>
+              <p style={{ fontSize: "12px", color: MUTED }}>PDF or DOCX up to 50 MB</p>
+            </div>
+
+            <button
+              onClick={() => inputRef.current?.click()}
+              style={{
+                marginTop: "14px", background: M, color: "#fff",
+                border: "none", borderRadius: "7px", padding: "11px 28px",
+                fontSize: "14px", fontWeight: 500, cursor: "pointer", width: "100%",
+              }}
+            >
+              Choose a file
+            </button>
+
+            <input ref={inputRef} type="file" accept=".pdf,.docx" style={{ display: "none" }}
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+
+            {uploadError && <p style={{ fontSize: "12px", color: "#C0392B", marginTop: "10px" }}>{uploadError}</p>}
           </div>
         )}
+        <style>{`@keyframes cd-spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#FAF6F4" }}>
+
+      {/* Tab bar */}
+      <div style={{ display: "flex", alignItems: "center", borderBottom: `1px solid ${BORDER}`, background: "#fff", flexShrink: 0 }}>
+        <button style={tabBtn(tab === "chat")} onClick={() => setTab("chat")}>Chat</button>
+        <button style={{ ...tabBtn(tab === "doc"), opacity: 1 }} onClick={() => setTab("doc")}>Document</button>
+        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px", paddingRight: "20px" }}>
+          <span style={{
+            fontSize: "10px", padding: "3px 9px", borderRadius: "20px", fontWeight: 600,
+            background: LIGHT, color: M, border: `1px solid ${BORDER}`, letterSpacing: "0.05em",
+          }}>
+            {document.file_type.toUpperCase()}
+          </span>
+          <span style={{ fontSize: "12px", color: MUTED, maxWidth: "220px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {document.filename}
+          </span>
+        </div>
       </div>
 
-      {/* ── CHAT TAB ── */}
+      {/* Chat tab */}
       {tab === "chat" && (
         <>
-          {/* Messages */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "28px 28px", display: "flex", flexDirection: "column", gap: "24px" }}>
+          <div style={{ flex: 1, overflowY: "auto", padding: "28px", display: "flex", flexDirection: "column", gap: "22px" }}>
 
-            {/* No document */}
-            {!document && (
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", gap: "16px", paddingTop: "100px" }}>
-                <div style={{ width: 64, height: 64, borderRadius: 18, background: LIGHT, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="30" height="30" fill="none" stroke={GREEN} strokeWidth="1.4" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-                  </svg>
-                </div>
-                <div>
-                  <p style={{ fontSize: "15px", fontWeight: 600, color: "#374151" }}>No document selected</p>
-                  <p style={{ fontSize: "13px", color: "#9CA3AF", marginTop: "6px", lineHeight: 1.7 }}>Upload or select a document from the sidebar<br />to start asking questions.</p>
-                </div>
-              </div>
-            )}
-
-            {/* Welcome hints */}
-            {document && messages.length === 0 && !loading && (
-              <div style={{ padding: "22px 24px", borderRadius: "14px", background: LIGHT, border: `1px solid ${BORDER}`, maxWidth: "580px" }}>
-                <p style={{ fontSize: "13px", fontWeight: 600, color: DARK, marginBottom: "10px" }}>
-                  Ready to answer questions about <span style={{ color: GREEN }}>{document.filename}</span>
+            {/* Welcome card */}
+            {messages.length === 0 && !loading && (
+              <div style={{
+                background: "#fff", border: `1px solid ${BORDER}`,
+                borderRadius: "12px", padding: "22px 24px", maxWidth: "560px",
+              }}>
+                <p style={{ fontSize: "13px", fontWeight: 600, color: DARK, marginBottom: "4px" }}>
+                  {document.filename}
                 </p>
-                <p style={{ fontSize: "13px", color: "#6B7280", lineHeight: 1.7, marginBottom: "16px" }}>
-                  Ask for summaries, specific details, comparisons, or explanations.
+                <p style={{ fontSize: "12px", color: MUTED, marginBottom: "16px" }}>
+                  {formatSize(document.file_size)} · uploaded {formatDate(document.created_at)}
                 </p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                  {["What is this document about?", "Summarise the key points", "What are the main findings?"].map((hint) => (
+                <p style={{ fontSize: "13px", color: "#6B3A3F", lineHeight: 1.7, marginBottom: "16px" }}>
+                  Ask anything about this document. ChunkDoc will find the answer and tell you which page it came from.
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "7px" }}>
+                  {STARTERS.map((hint) => (
                     <button
                       key={hint}
-                      onClick={() => setInput(hint)}
+                      onClick={() => handleSend(hint)}
                       style={{
-                        textAlign: "left", background: "#fff", border: `1px solid ${BORDER}`,
-                        borderRadius: "9px", padding: "10px 14px", fontSize: "13px", color: "#374151",
+                        textAlign: "left", background: "#FAF6F4", border: `1px solid ${BORDER}`,
+                        borderRadius: "8px", padding: "9px 14px", fontSize: "13px", color: DARK,
                         cursor: "pointer", transition: "border-color 0.15s, background 0.15s",
                       }}
-                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = GREEN; e.currentTarget.style.background = "#FAFCF8"; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.background = "#fff"; }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = M; e.currentTarget.style.background = LIGHT; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = BORDER; e.currentTarget.style.background = "#FAF6F4"; }}
                     >
                       {hint}
                     </button>
@@ -142,34 +223,29 @@ export default function MainPanel({ document }: Props) {
 
             {/* Messages */}
             {messages.map((msg, i) => (
-              <div key={i} style={{ display: "flex", flexDirection: "column", gap: "6px", alignItems: msg.role === "user" ? "flex-end" : "flex-start" }}>
-                <p style={{ fontSize: "11px", color: "#9CA3AF", paddingLeft: msg.role === "user" ? 0 : "4px", paddingRight: msg.role === "user" ? "4px" : 0 }}>
-                  {msg.role === "user" ? "You" : "DocuZen"}
+              <div key={i} style={{ display: "flex", flexDirection: "column", gap: "5px", alignItems: msg.role === "user" ? "flex-end" : "flex-start" }}>
+                <p style={{ fontSize: "10px", color: MUTED, letterSpacing: "0.05em", fontWeight: 500, paddingLeft: msg.role === "user" ? 0 : "4px", paddingRight: msg.role === "user" ? "4px" : 0 }}>
+                  {msg.role === "user" ? "YOU" : "CHUNKDOC"}
                 </p>
                 <div style={{
-                  maxWidth: "82%",
-                  padding: "14px 18px",
-                  borderRadius: msg.role === "user" ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
-                  fontSize: "14px",
-                  lineHeight: 1.85,
-                  background: msg.role === "user" ? GREEN : "#fff",
-                  color: msg.role === "user" ? "#fff" : "#1F2937",
+                  maxWidth: "80%", padding: "13px 17px",
+                  borderRadius: msg.role === "user" ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
+                  fontSize: "14px", lineHeight: 1.8,
+                  background: msg.role === "user" ? M : "#fff",
+                  color: msg.role === "user" ? "#fff" : DARK,
                   border: msg.role === "assistant" ? `1px solid ${BORDER}` : "none",
                   whiteSpace: "pre-wrap",
                 }}>
                   {msg.content}
                 </div>
                 {msg.sources && msg.sources.length > 0 && (
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", paddingLeft: "4px", marginTop: "2px" }}>
-                    <span style={{ fontSize: "11px", color: "#9CA3AF", alignSelf: "center" }}>Sources:</span>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", paddingLeft: "4px", marginTop: "2px" }}>
                     {msg.sources.slice(0, 5).map((s, si) => (
                       <span key={si} style={{
-                        display: "inline-flex", alignItems: "center", gap: "5px",
-                        fontSize: "11px", padding: "4px 11px", borderRadius: "20px",
-                        background: LIGHT, color: DARK, border: `1px solid ${BORDER}`, fontWeight: 500,
+                        fontSize: "11px", padding: "3px 10px", borderRadius: "20px",
+                        background: LIGHT, color: M, border: `1px solid ${BORDER}`, fontWeight: 600,
                       }}>
                         {s.page_number ? `Page ${s.page_number}` : `Chunk ${s.chunk_index}`}
-                        <span style={{ opacity: 0.5 }}>· {(s.score * 100).toFixed(0)}%</span>
                       </span>
                     ))}
                   </div>
@@ -177,51 +253,49 @@ export default function MainPanel({ document }: Props) {
               </div>
             ))}
 
-            {/* Loading dots */}
             {loading && (
-              <div style={{ display: "flex", flexDirection: "column", gap: "6px", alignItems: "flex-start" }}>
-                <p style={{ fontSize: "11px", color: "#9CA3AF", paddingLeft: "4px" }}>DocuZen</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "5px", alignItems: "flex-start" }}>
+                <p style={{ fontSize: "10px", color: MUTED, letterSpacing: "0.05em", fontWeight: 500, paddingLeft: "4px" }}>CHUNKDOC</p>
                 <div style={{
-                  padding: "14px 18px", borderRadius: "16px 16px 16px 4px",
+                  padding: "13px 18px", borderRadius: "14px 14px 14px 4px",
                   background: "#fff", border: `1px solid ${BORDER}`,
                   display: "flex", gap: "5px", alignItems: "center",
                 }}>
                   {[0, 1, 2].map((i) => (
                     <span key={i} style={{
-                      width: 7, height: 7, borderRadius: "50%", background: "#B8C4A8",
-                      display: "inline-block", animation: `dz-bounce 1.2s ${i * 0.2}s infinite`,
+                      width: 6, height: 6, borderRadius: "50%", background: BORDER,
+                      display: "inline-block", animation: `cd-bounce 1.2s ${i * 0.2}s infinite`,
                     }} />
                   ))}
                 </div>
               </div>
             )}
-
             <div ref={bottomRef} />
           </div>
 
           {/* Input */}
-          <div style={{ padding: "16px 24px", borderTop: `1px solid ${BORDER}`, background: "#fff", flexShrink: 0 }}>
+          <div style={{ padding: "14px 24px", borderTop: `1px solid ${BORDER}`, background: "#fff", flexShrink: 0 }}>
             <div
               style={{
                 display: "flex", alignItems: "flex-end", gap: "10px",
-                border: "1.5px solid", borderColor: BORDER,
-                borderRadius: "13px", padding: "10px 12px 10px 18px",
-                background: "#fff", transition: "border-color 0.15s",
+                border: `1.5px solid ${BORDER}`, borderRadius: "10px",
+                padding: "10px 12px 10px 16px", background: "#fff",
+                transition: "border-color 0.15s",
               }}
-              onFocusCapture={(e) => (e.currentTarget.style.borderColor = GREEN)}
+              onFocusCapture={(e) => (e.currentTarget.style.borderColor = M)}
               onBlurCapture={(e) => (e.currentTarget.style.borderColor = BORDER)}
             >
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-                placeholder={document ? "Ask a question about this document..." : "Select a document first..."}
-                disabled={!document || loading}
+                placeholder="Ask a question about this document..."
+                disabled={loading}
                 rows={1}
                 style={{
                   flex: 1, border: "none", outline: "none",
                   fontSize: "14px", background: "transparent",
-                  color: "#111827", fontFamily: "inherit",
+                  color: DARK, fontFamily: "inherit",
                   resize: "none", lineHeight: 1.65,
                   maxHeight: "140px", overflowY: "auto",
                 }}
@@ -232,108 +306,89 @@ export default function MainPanel({ document }: Props) {
                 }}
               />
               <button
-                onClick={handleSend}
-                disabled={!document || !input.trim() || loading}
+                onClick={() => handleSend()}
+                disabled={!input.trim() || loading}
                 style={{
-                  background: !document || !input.trim() || loading ? "#E5E7EB" : GREEN,
-                  border: "none", borderRadius: "9px", width: 36, height: 36,
+                  background: !input.trim() || loading ? "#F0E8EA" : M,
+                  border: "none", borderRadius: "7px", width: 34, height: 34,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  cursor: !document || !input.trim() || loading ? "not-allowed" : "pointer",
+                  cursor: !input.trim() || loading ? "not-allowed" : "pointer",
                   transition: "background 0.15s", flexShrink: 0,
                 }}
               >
-                <svg width="15" height="15" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24">
+                <svg width="14" height="14" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
                 </svg>
               </button>
             </div>
-            <p style={{ fontSize: "11px", color: "#C4C9BC", textAlign: "center", marginTop: "8px" }}>
+            <p style={{ fontSize: "11px", color: "#D1B5B8", textAlign: "center", marginTop: "7px" }}>
               Enter to send · Shift+Enter for new line
             </p>
           </div>
         </>
       )}
 
-      {/* ── DOCUMENT TAB ── */}
-      {tab === "doc" && document && (
-        <div style={{ flex: 1, overflowY: "auto", padding: "36px 36px" }}>
-          <div style={{ maxWidth: "560px", display: "flex", flexDirection: "column", gap: "24px" }}>
-
-            {/* Doc identity */}
-            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <div style={{ width: 56, height: 56, borderRadius: 16, background: LIGHT, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <svg width="26" height="26" fill="none" stroke={GREEN} strokeWidth="1.4" viewBox="0 0 24 24">
+      {/* Document tab */}
+      {tab === "doc" && (
+        <div style={{ flex: 1, overflowY: "auto", padding: "36px" }}>
+          <div style={{ maxWidth: "520px", display: "flex", flexDirection: "column", gap: "20px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+              <div style={{ width: 50, height: 50, borderRadius: 13, background: LIGHT, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <svg width="24" height="24" fill="none" stroke={M} strokeWidth="1.4" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                 </svg>
               </div>
               <div>
-                <p style={{ fontSize: "16px", fontWeight: 600, color: DARK, marginBottom: "4px", wordBreak: "break-word" }}>{document.filename}</p>
+                <p style={{ fontSize: "15px", fontWeight: 600, color: DARK, wordBreak: "break-word" }}>{document.filename}</p>
                 <span style={{
-                  fontSize: "11px", padding: "3px 10px", borderRadius: "20px",
-                  background: document.status === "ready" ? "#E6F4EA" : LIGHT,
-                  color: document.status === "ready" ? "#2D6A4F" : MID,
-                  border: `1px solid ${document.status === "ready" ? "#B7DFC9" : BORDER}`,
-                  fontWeight: 600,
+                  display: "inline-block", marginTop: "5px",
+                  fontSize: "10px", padding: "2px 9px", borderRadius: "20px",
+                  background: document.status === "ready" ? "#F0F7F4" : LIGHT,
+                  color: document.status === "ready" ? "#1A6B45" : MUTED,
+                  border: `0.5px solid ${document.status === "ready" ? "#BBE0CF" : BORDER}`,
+                  fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" as const,
                 }}>
-                  {document.status === "ready" ? "Ready" : document.status === "processing" ? "Processing…" : "Failed"}
+                  {document.status === "ready" ? "Ready" : document.status}
                 </span>
               </div>
             </div>
 
-            <div style={{ height: "1px", background: BORDER }} />
-
-            {/* Details grid */}
-            <div>
-              <p style={{ fontSize: "11px", fontWeight: 600, letterSpacing: "0.06em", color: MID, marginBottom: "14px" }}>FILE DETAILS</p>
-              <div style={{ background: "#fff", border: `1px solid ${BORDER}`, borderRadius: "12px", overflow: "hidden" }}>
-                {[
-                  { label: "File type",    value: document.file_type.toUpperCase() },
-                  { label: "File size",    value: formatSize(document.file_size) },
-                  { label: "Uploaded",     value: formatDate(document.created_at) },
-                  { label: "Status",       value: document.status.charAt(0).toUpperCase() + document.status.slice(1) },
-                ].map((row, i, arr) => (
-                  <div key={row.label} style={{
-                    display: "flex", justifyContent: "space-between", alignItems: "center",
-                    padding: "13px 18px",
-                    borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : "none",
-                  }}>
-                    <span style={{ fontSize: "13px", color: MID }}>{row.label}</span>
-                    <span style={{ fontSize: "13px", fontWeight: 500, color: DARK }}>{row.value}</span>
-                  </div>
-                ))}
-              </div>
+            <div style={{ background: "#fff", border: `1px solid ${BORDER}`, borderRadius: "10px", overflow: "hidden" }}>
+              {[
+                { label: "File type", value: document.file_type.toUpperCase() },
+                { label: "File size", value: formatSize(document.file_size) },
+                { label: "Uploaded",  value: formatDate(document.created_at) },
+                { label: "Status",    value: document.status.charAt(0).toUpperCase() + document.status.slice(1) },
+              ].map((row, i, arr) => (
+                <div key={row.label} style={{
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                  padding: "12px 18px",
+                  borderBottom: i < arr.length - 1 ? `1px solid ${BORDER}` : "none",
+                }}>
+                  <span style={{ fontSize: "13px", color: MUTED }}>{row.label}</span>
+                  <span style={{ fontSize: "13px", fontWeight: 500, color: DARK }}>{row.value}</span>
+                </div>
+              ))}
             </div>
 
-            {/* CTA back to chat */}
-            <div style={{ background: LIGHT, border: `1px solid ${BORDER}`, borderRadius: "12px", padding: "20px 22px" }}>
-              <p style={{ fontSize: "13px", fontWeight: 600, color: DARK, marginBottom: "6px" }}>Start asking questions</p>
-              <p style={{ fontSize: "13px", color: "#6B7280", lineHeight: 1.7, marginBottom: "14px" }}>
-                Switch to the Chat tab to ask anything about this document — summaries, specific facts, comparisons.
-              </p>
-              <button
-                onClick={() => setTab("chat")}
-                style={{
-                  background: GREEN, color: "#fff", border: "none",
-                  borderRadius: "9px", padding: "9px 20px",
-                  fontSize: "13px", fontWeight: 600, cursor: "pointer",
-                  transition: "background 0.15s",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#3a4a24")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = GREEN)}
-              >
-                Go to chat →
-              </button>
-            </div>
-
+            <button
+              onClick={() => setTab("chat")}
+              style={{
+                background: M, color: "#fff", border: "none",
+                borderRadius: "8px", padding: "11px 24px",
+                fontSize: "13px", fontWeight: 600, cursor: "pointer",
+                alignSelf: "flex-start",
+              }}
+            >
+              Back to chat
+            </button>
           </div>
         </div>
       )}
 
       <style>{`
-        @keyframes dz-bounce {
-          0%, 80%, 100% { transform: translateY(0); }
-          40% { transform: translateY(-6px); }
-        }
+        @keyframes cd-bounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-5px); } }
+        @keyframes cd-spin { to { transform: rotate(360deg); } }
       `}</style>
     </div>
   );

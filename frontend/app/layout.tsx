@@ -14,8 +14,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "DocuZen — AI Document Analysis",
-  description: "AI-powered document analysis for legal and financial firms",
+  title: "ChunkDoc · Tygerberg Medical Campus",
+  description: "Upload your medical documents and ask them questions. Built for students at Stellenbosch University Tygerberg campus.",
 };
 
 export default function RootLayout({
