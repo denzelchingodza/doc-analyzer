@@ -9,9 +9,9 @@ interface Props {
   onUpload: (doc: Document) => void;
 }
 
-const DEEP        = "#190508";
-const PANEL       = "#2A0810";
-const HERO        = "#611828";
+const DEEP        = "#12030A";
+const PANEL       = "#270818";
+const HERO        = "#591030";
 const GOLD        = "#C9A227";
 const BORDER      = "rgba(255,255,255,0.08)";
 const BORDER_GOLD = "rgba(201,162,39,0.2)";

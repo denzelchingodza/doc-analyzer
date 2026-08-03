@@ -12,7 +12,7 @@ interface Props {
   onDeleted: (id: string) => void;
 }
 
-const PANEL       = "#2A0810";
+const PANEL       = "#270818";
 const GOLD        = "#C9A227";
 const BORDER      = "rgba(255,255,255,0.08)";
 const BORDER_GOLD = "rgba(201,162,39,0.2)";

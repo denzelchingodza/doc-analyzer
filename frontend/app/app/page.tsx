@@ -34,7 +34,7 @@ export default function AppPage() {
   }
 
   return (
-    <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "#190508" }}>
+    <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "#12030A" }}>
 
       {sidebarOpen && (
         <div

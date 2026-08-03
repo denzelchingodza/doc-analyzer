@@ -2,14 +2,17 @@
 
 import Link from "next/link";
 
-const NAV         = "#3A0D16";
-const HERO        = "#611828";
-const DEEP        = "#190508";
+const NAV         = "#380A1C";
+const HERO        = "#591030";
+const DEEP        = "#12030A";
 const GOLD        = "#C9A227";
 const BORDER_GOLD = "rgba(201,162,39,0.18)";
 const BORDER_W    = "rgba(255,255,255,0.08)";
 const WHITE_DIM   = "rgba(255,255,255,0.65)";
 const WHITE_FAINT = "rgba(255,255,255,0.35)";
+
+const _patSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><circle cx="40" cy="40" r="36" fill="none" stroke="white" stroke-opacity="0.05" stroke-width="1.5"/><circle cx="0" cy="0" r="36" fill="none" stroke="white" stroke-opacity="0.05" stroke-width="1.5"/><circle cx="80" cy="0" r="36" fill="none" stroke="white" stroke-opacity="0.05" stroke-width="1.5"/><circle cx="0" cy="80" r="36" fill="none" stroke="white" stroke-opacity="0.05" stroke-width="1.5"/><circle cx="80" cy="80" r="36" fill="none" stroke="white" stroke-opacity="0.05" stroke-width="1.5"/></svg>`;
+const PATTERN     = `url("data:image/svg+xml,${encodeURIComponent(_patSvg)}")`;
 
 function Logo({ size = 28 }: { size?: number }) {
   return (
@@ -55,7 +58,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section style={{ background: HERO, padding: "68px 40px 76px", textAlign: "center" }}>
+      <section style={{ background: HERO, backgroundImage: PATTERN, padding: "68px 40px 76px", textAlign: "center" }}>
         <p style={{ color: GOLD, fontSize: "10px", fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", marginBottom: "26px" }}>
           Tygerberg Medical
         </p>
@@ -162,7 +165,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA strip */}
-      <section style={{ background: NAV, padding: "56px 40px", textAlign: "center" }}>
+      <section style={{ background: NAV, backgroundImage: PATTERN, padding: "56px 40px", textAlign: "center" }}>
         <h2 style={{ color: "#fff", fontSize: "28px", fontWeight: 700, margin: "0 0 10px", letterSpacing: "-0.4px", lineHeight: 1.2 }}>
           Your notes. Your questions. Your answers.
         </h2>
