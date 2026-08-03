@@ -109,7 +109,7 @@ export default function LandingPage() {
           </div>
           <p style={{ color: "rgba(255,255,255,0.42)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", margin: "0 0 6px" }}>Your question</p>
           <p style={{ color: "rgba(255,255,255,0.85)", fontSize: "12px", margin: "0 0 12px", lineHeight: 1.5, fontStyle: "italic" }}>
-            "What is the first-line treatment for septic shock?"
+            {`"What is the first-line treatment for septic shock?"`}
           </p>
           <div style={{ background: "rgba(201,162,39,0.07)", border: `1px solid ${BORDER_GOLD}`, borderRadius: "8px", padding: "11px 12px" }}>
             <p style={{ color: "rgba(255,255,255,0.82)", fontSize: "11.5px", lineHeight: 1.6, margin: "0 0 8px" }}>
@@ -133,7 +133,7 @@ export default function LandingPage() {
         <div className="steps-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "28px", maxWidth: "860px", margin: "0 auto" }}>
           {[
             { n: "1", title: "Upload your document", body: "Drop in any PDF or DOCX up to 50 MB. Lecture notes, a clinical guideline, a textbook chapter, a past paper." },
-            { n: "2", title: "Ask in plain English", body: '"What is the management of hypertensive crisis?" ChunkDoc searches your document, not the internet.' },
+            { n: "2", title: "Ask in plain English", body: "Ask anything in plain language. ChunkDoc searches your document, not the internet." },
             { n: "3", title: "Get grounded answers", body: "Every answer includes the exact page number it came from. Verify it yourself in seconds. No hallucinations from a general model." },
           ].map((s, i) => (
             <div key={i}>
