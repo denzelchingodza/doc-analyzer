@@ -95,7 +95,7 @@ def validate_medical_content(pages: list[dict]) -> tuple[bool, str]:
         is_valid is True if the document passes; rejection_reason is empty then.
     """
     sample_pages = pages[:3]
-    raw = " ".join(p.get("text", "") for p in sample_pages)
+    raw = " ".join(p.text for p in sample_pages)
     lowered = raw.lower()
 
     word_count = len(re.findall(r"\b\w+\b", lowered))
