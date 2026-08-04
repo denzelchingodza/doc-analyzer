@@ -83,6 +83,66 @@ Question  →  Embed query  →  Cosine similarity search  →  GPT-4o-mini (gro
 
 ---
 
+## Technology decisions
+
+Every tool in this stack was chosen deliberately. These are the alternatives I considered for each layer and the reasoning behind what I picked.
+
+---
+
+**Vector database: pgvector over Qdrant, Pinecone, and Chroma**
+
+The first version of ChunkDoc used Qdrant as a dedicated vector store. It worked, but running two separate services on Render's free tier meant two cold starts — the vector endpoint alone could take 30+ seconds to wake up. I migrated to pgvector, which runs as a PostgreSQL extension inside the database I already had. One service instead of two, zero additional cost, and cold start time halved.
+
+Pinecone was an option. It is well-documented and scales easily, but it is not free at any meaningful volume. Chroma is solid for local development and prototyping but is not designed for production deployments with persistent state across restarts. pgvector is less purpose-built than either, but for a system this size the tradeoff is entirely in its favour.
+
+---
+
+**Embedding model: text-embedding-3-small over text-embedding-3-large and ada-002**
+
+| Model | Dimensions | Cost per 1M tokens | Verdict |
+|---|---|---|---|
+| text-embedding-3-large | 3072 | ~$0.13 | More accurate, but ~20x more expensive |
+| text-embedding-3-small | 1536 | ~$0.02 | Strong quality at a fraction of the cost |
+| text-embedding-ada-002 | 1536 | ~$0.10 | Older, more expensive than 3-small, lower quality |
+
+For retrieval on well-structured medical text, the quality difference between small and large is negligible. ada-002 is strictly worse than 3-small at a higher price. 3-small was the only sensible choice.
+
+I also evaluated local embedding models via HuggingFace — `all-MiniLM-L6-v2` and `bge-small-en` specifically. Both are free and run on CPU. The problem is deployment: Render's free tier has 512MB of RAM, and loading a local model on startup reliably crashes the service. For a hosted application, local embeddings require dedicated compute that costs more than just using the API.
+
+---
+
+**LLM: GPT-4o-mini over GPT-4o, Claude, and local models**
+
+GPT-4o-mini handles grounded answer generation well when the context is explicit and the task is constrained. The system prompt instructs it to answer only from the retrieved chunks and to cite page numbers — the model does not need reasoning depth for this, it needs instruction-following accuracy. GPT-4o-mini is strong at that and costs roughly 15x less than GPT-4o.
+
+GPT-4o and Claude Sonnet are better models. For a task this narrow they are also overkill. Running Llama 3 locally was considered — it would eliminate per-query cost entirely — but the same compute constraints that rule out local embeddings apply here, compounded by the fact that generation is far more memory-intensive than embedding.
+
+---
+
+**Backend framework: FastAPI over Flask and Django REST Framework**
+
+FastAPI was written for async Python from the start. The entire document pipeline — parsing, embedding, vector storage, query retrieval — benefits from non-blocking I/O. Flask's async support exists but is bolted on. Django REST Framework brings a lot of batteries that are irrelevant here: ORM conventions, admin panel, session management. FastAPI also generates interactive API docs at `/docs` automatically, which was useful during development.
+
+---
+
+**Document parsing: pdfplumber over PyMuPDF and Unstructured**
+
+The critical requirement was page boundary metadata: every chunk must know which page it came from so the citation is accurate. pdfplumber exposes page-level text extraction cleanly and handles a wide range of PDF structures. PyMuPDF (fitz) is faster and better with complex layouts, but pdfplumber was sufficient for the text-dense documents medical students use and required less configuration.
+
+Unstructured is a more powerful library that can handle scanned documents, tables, and mixed layouts. It is also a significantly heavier dependency and has a cloud API model that reintroduces cost. For text-based PDFs, it was not worth the overhead.
+
+---
+
+**Deployment: Render + Vercel over Railway, Fly.io, and AWS**
+
+Vercel is the natural choice for Next.js — it is built by the same team, git-push deploys work without configuration, and the free tier is generous for a frontend with no server-side compute.
+
+For the backend, Render and Railway are the closest alternatives. Railway has a slightly better developer experience and more predictable pricing, but Render offers a managed PostgreSQL instance with pgvector support on the free tier, which Railway does not. That single feature made the decision easy.
+
+Fly.io gives more control over infrastructure and better cold start performance, but requires more configuration upfront. AWS was not considered seriously for a solo project at this scale — the operational overhead is not worth it when Render handles everything.
+
+---
+
 ## Running locally
 
 **1. Clone and install**
