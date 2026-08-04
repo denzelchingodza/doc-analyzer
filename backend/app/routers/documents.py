@@ -11,6 +11,7 @@ from app.schemas.document import DocumentResponse, DocumentDetailResponse
 from app.services.parser import parse_file
 from app.services.chunker import chunk_pages
 from app.services.rag import store_chunks
+from app.services.medical_validator import validate_medical_content
 from app.config import settings
 
 router = APIRouter(prefix="/documents", tags=["documents"])
@@ -47,6 +48,17 @@ async def upload_document(
 
     file_type = ALLOWED_TYPES[file.content_type]
 
+    # Parse first so we can validate content before touching the database
+    try:
+        pages = parse_file(file_bytes, file_type)
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=f"Could not parse file: {e}")
+
+    # Reject non-medical documents before any embedding cost is incurred
+    is_medical, rejection_reason = validate_medical_content(pages)
+    if not is_medical:
+        raise HTTPException(status_code=400, detail=rejection_reason)
+
     # Save document record
     doc = Document(
         id=str(uuid.uuid4()),
@@ -60,8 +72,7 @@ async def upload_document(
     await db.refresh(doc)
 
     try:
-        # Parse → chunk → embed → store
-        pages = parse_file(file_bytes, file_type)
+        # Chunk → embed → store (parsing already done above)
         chunks = chunk_pages(pages)
 
         db_chunks = [
