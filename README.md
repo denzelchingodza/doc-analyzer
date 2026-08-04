@@ -12,11 +12,9 @@ A RAG powered document Q&A system built for medical students at Stellenbosch Uni
 
 ## Why this exists
 
-From high school I developed a genuine interest in medicine not as a path I took, but as a field I respected for its density and the precision it demands. When I started building software, the intersection felt natural.
+From high school I developed a genuine interest in medicine not just as a path I wanted to take but couldn't, but also as a field I respected for its density and the precision it demands. When I started building software, the intersection felt natural and with how the development of AI has been in that it can predict stuff through deep learning i have started to find my way back to medicine through thr development of software and intelligent systems.
 
-Before writing a single line of code, I spoke to friends studying medicine at Tygerberg. The same problem came up in every conversation: finding one specific piece of information inside a 200 page PDF was costing them 30 to 60 minutes, during an already demanding curriculum. Ctrl+F fails on scanned PDFs. General AI models hallucinate dosages and diagnostic criteria. And even when a student found the right paragraph, there was no way to verify it quickly.
-
-The problem was real and specific. ChunkDoc is the solution I built to address it and to learn, in depth, how production AI systems actually work.
+Before writing this development, I spoke to friends studying medicine at Tygerberg. The same problem came up in every conversation: finding one specific piece of information inside a 200 page PDF was costing them 30 to 60 minutes, during an already demanding curriculum. Ctrl+F fails on scanned PDFs. General AI models hallucinate dosages and diagnostic criteria. And even when a student found the right paragraph, there was no way to verify it quickly. And i guess for ease of work and helping them get what they want quickly i decided to make a document analysis tool using AI to analyse what would take a human 30+ minutes. it also was a learning curve for me to do this and has become my debut in ai system design and development. 
 
 ---
 
@@ -40,7 +38,7 @@ Upload any PDF or DOCX. Ask a question in plain English. Get a direct answer wit
 
 ```
 You:        "What is the first-line treatment for septic shock?"
-ChunkDoc:   "Early goal-directed therapy includes fluid resuscitation
+ChunkDoc:   "Early goal directed therapy includes fluid resuscitation
              with 30 mL/kg crystalloid within 3 hours..."
              ── Page 1247
 ```
