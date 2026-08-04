@@ -12,7 +12,7 @@ A RAG powered document Q&A system built for medical students at Stellenbosch Uni
 
 ## Why this exists
 
-From high school I developed a genuine interest in medicine not just as a path I wanted to take but couldn't, but also as a field I respected for its density and the precision it demands. When I started building software, the intersection felt natural and with how the development of AI has been in that it can predict stuff through deep learning i have started to find my way back to medicine through thr development of software and intelligent systems.
+From high school I developed a genuine interest in medicine not just as a path I wanted to take but couldn't, but also as a field I respected for its density and the precision it demands. When I started building software, the intersection felt natural and with how the development of AI has been in that it can predict stuff through deep learning. I guess i have started to find my way back to medicine through the development of software and intelligent systems. (LOL)
 
 Before writing this development, I spoke to friends studying medicine at Tygerberg. The same problem came up in every conversation: finding one specific piece of information inside a 200 page PDF was costing them 30 to 60 minutes, during an already demanding curriculum. Ctrl+F fails on scanned PDFs. General AI models hallucinate dosages and diagnostic criteria. And even when a student found the right paragraph, there was no way to verify it quickly. And i guess for ease of work and helping them get what they want quickly i decided to make a document analysis tool using AI to analyse what would take a human 30+ minutes. it also was a learning curve for me to do this and has become my debut in ai system design and development. 
 
