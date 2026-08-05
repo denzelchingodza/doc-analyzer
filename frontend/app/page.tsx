@@ -132,19 +132,8 @@ export default function LandingPage() {
         background: `radial-gradient(ellipse 70% 70% at 50% 50%, transparent 30%, ${DEEP}88 100%)`,
       }} />
 
-      {/* Nav — name only */}
-      <nav style={{
-        position: "relative", zIndex: 10,
-        display: "flex", alignItems: "center",
-        padding: "22px 36px",
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "9px" }}>
-          <Logo size={24} />
-          <span style={{ fontSize: "15px", fontWeight: 800, letterSpacing: "-0.3px" }}>
-            Chunk<span style={{ color: GOLD }}>Doc</span>
-          </span>
-        </div>
-      </nav>
+      {/* Nav — empty, just spacing */}
+      <nav style={{ position: "relative", zIndex: 10, padding: "22px 36px", height: "68px" }} />
 
       {/* Hero — centred, full height */}
       <section style={{
