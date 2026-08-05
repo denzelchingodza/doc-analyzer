@@ -34,7 +34,7 @@ Five students. Same pattern. Information retrieval was taking more time than the
 
 ## What it does
 
-Upload any PDF or DOCX. Ask a question in plain English. Get a direct answer with the exact page number it came from grounded entirely in your document, with no internet search and no hallucination from general model knowledge.
+Upload a medical PDF or DOCX. Ask a question in plain English. Get a direct answer with the exact page number it came from grounded entirely in your document, with no internet search and no hallucination from general model knowledge.
 
 ```
 You:        "What is the first-line treatment for septic shock?"
