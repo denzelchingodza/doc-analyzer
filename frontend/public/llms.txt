@@ -1,0 +1,22 @@
+# ChunkDoc
+
+AI-powered document analysis tool built for medical students at Stellenbosch University Tygerberg campus.
+
+## What it does
+
+Allows users to upload PDF medical documents (clinical guidelines, study notes, research papers) and ask questions about their contents in plain English. Uses RAG (retrieval-augmented generation) with pgvector to find relevant chunks before passing them to GPT-4o-mini for an answer.
+
+## Stack
+
+- Frontend: Next.js, TypeScript, Tailwind CSS
+- Backend: FastAPI, Python
+- AI: OpenAI GPT-4o-mini, pgvector (PostgreSQL)
+- Deployment: Vercel (frontend), Render (API)
+
+## Live
+
+https://doc-analyzer-as5k.vercel.app
+
+## Author
+
+Denzel Chingodza — denzel.chingodza@icloud.com
