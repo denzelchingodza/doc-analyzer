@@ -380,16 +380,18 @@ export default function MainPanel({ document, onUpload }: Props) {
               </div>
               <div>
                 <p style={{ fontSize: "15px", fontWeight: 600, color: "#fff", wordBreak: "break-word" }}>{document.filename}</p>
-                <span style={{
-                  display: "inline-block", marginTop: "5px",
-                  fontSize: "10px", padding: "2px 9px", borderRadius: "20px",
-                  background: document.status === "ready" ? "rgba(34,197,94,0.12)" : "rgba(201,162,39,0.12)",
-                  color: document.status === "ready" ? "#4ADE80" : GOLD,
-                  border: `0.5px solid ${document.status === "ready" ? "rgba(74,222,128,0.25)" : BORDER_GOLD}`,
-                  fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" as const,
-                }}>
-                  {document.status === "ready" ? "Ready" : document.status}
-                </span>
+                {document.status !== "ready" && (
+                  <span style={{
+                    display: "inline-block", marginTop: "5px",
+                    fontSize: "10px", padding: "2px 9px", borderRadius: "20px",
+                    background: "rgba(201,162,39,0.12)",
+                    color: GOLD,
+                    border: `0.5px solid ${BORDER_GOLD}`,
+                    fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" as const,
+                  }}>
+                    {document.status}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -398,7 +400,6 @@ export default function MainPanel({ document, onUpload }: Props) {
                 { label: "File type", value: document.file_type.toUpperCase() },
                 { label: "File size", value: formatSize(document.file_size) },
                 { label: "Uploaded",  value: formatDate(document.created_at) },
-                { label: "Status",    value: document.status.charAt(0).toUpperCase() + document.status.slice(1) },
               ].map((row, i, arr) => (
                 <div key={row.label} style={{
                   display: "flex", justifyContent: "space-between", alignItems: "center",

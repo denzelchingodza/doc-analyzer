@@ -149,15 +149,17 @@ export default function Sidebar({ documents, selectedId, onSelect, onUploaded, o
                   <p style={{ fontSize: "11px", color: WHITE_FAINT, marginTop: "1px" }}>{formatSize(doc.file_size)}</p>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "5px", flexShrink: 0 }}>
-                  <span style={{
-                    fontSize: "9px", padding: "2px 7px", borderRadius: "20px", fontWeight: 600,
-                    background: doc.status === "ready" ? "rgba(34,197,94,0.12)" : doc.status === "failed" ? "rgba(248,113,113,0.12)" : "rgba(201,162,39,0.12)",
-                    color: doc.status === "ready" ? "#4ADE80" : doc.status === "failed" ? "#F87171" : GOLD,
-                    border: `0.5px solid ${doc.status === "ready" ? "rgba(74,222,128,0.25)" : doc.status === "failed" ? "rgba(248,113,113,0.25)" : BORDER_GOLD}`,
-                    textTransform: "uppercase", letterSpacing: "0.06em",
-                  }}>
-                    {doc.status === "processing" ? "loading" : doc.status}
-                  </span>
+                  {doc.status !== "ready" && (
+                    <span style={{
+                      fontSize: "9px", padding: "2px 7px", borderRadius: "20px", fontWeight: 600,
+                      background: doc.status === "failed" ? "rgba(248,113,113,0.12)" : "rgba(201,162,39,0.12)",
+                      color: doc.status === "failed" ? "#F87171" : GOLD,
+                      border: `0.5px solid ${doc.status === "failed" ? "rgba(248,113,113,0.25)" : BORDER_GOLD}`,
+                      textTransform: "uppercase", letterSpacing: "0.06em",
+                    }}>
+                      {doc.status === "processing" ? "loading" : doc.status}
+                    </span>
+                  )}
                   <button onClick={(e) => handleDelete(e, doc.id)}
                     style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.2)", padding: "2px", lineHeight: 1 }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = "#F87171")}
