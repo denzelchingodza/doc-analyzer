@@ -98,59 +98,54 @@ export default function MainPanel({ document, onUpload }: Props) {
   // No document: hero-style upload area matching the landing page
   if (!document) {
     return (
-      <div
-        style={{
-          display: "flex", flexDirection: "column", height: "100%", overflowY: "auto",
-          background: "#fff",
-          alignItems: "center", justifyContent: "center",
-          padding: "40px 32px",
-        }}
-      >
+      <div style={{
+        display: "flex", flexDirection: "column", height: "100%", overflowY: "auto",
+        background: "rgba(0,0,0,0.35)",
+        alignItems: "center", justifyContent: "center",
+        padding: "40px 32px",
+      }}>
         {uploading ? (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
             <div style={{
-              width: 52, height: 52, borderRadius: "50%",
-              border: "3px solid rgba(89,16,48,0.12)", borderTopColor: HERO,
+              width: 48, height: 48, borderRadius: "50%",
+              border: `3px solid rgba(201,162,39,0.15)`, borderTopColor: GOLD,
               animation: "cd-spin 0.85s linear infinite",
             }} />
             <div style={{ textAlign: "center" }}>
-              <p style={{ fontSize: "16px", fontWeight: 600, color: "#180509" }}>Processing your document</p>
-              <p style={{ fontSize: "13px", color: "#6B3A42", marginTop: "6px" }}>This usually takes a few seconds</p>
+              <p style={{ fontSize: "15px", fontWeight: 600, color: "#fff" }}>Processing your document</p>
+              <p style={{ fontSize: "12px", color: WHITE_FAINT, marginTop: "5px" }}>This usually takes a few seconds</p>
             </div>
           </div>
         ) : (
-          <div style={{ width: "100%", maxWidth: "480px" }}>
-
-            {/* Heading */}
-            <h2 style={{ fontSize: "22px", fontWeight: 700, color: "#180509", marginBottom: "8px", letterSpacing: "-0.3px" }}>
+          <div style={{ width: "100%", maxWidth: "440px" }}>
+            <h2 style={{ fontSize: "20px", fontWeight: 700, color: "#fff", marginBottom: "6px", letterSpacing: "-0.3px" }}>
               Upload a document to get started
             </h2>
-            <p style={{ fontSize: "13px", color: "#6B3A42", lineHeight: 1.7, marginBottom: "24px" }}>
-              Lecture notes, clinical guidelines, textbook chapters, past papers.
+            <p style={{ fontSize: "13px", color: WHITE_FAINT, lineHeight: 1.7, marginBottom: "22px" }}>
+              Clinical guidelines, lecture notes, textbook chapters, past papers.
               Ask anything and get the answer with the page number it came from.
             </p>
 
-            {/* Drop zone */}
             <div
               onClick={() => inputRef.current?.click()}
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={onDrop}
               style={{
-                border: `1.5px dashed ${dragOver ? HERO : "#D4B0B6"}`,
-                borderRadius: "10px", padding: "28px 20px",
+                border: `1.5px dashed ${dragOver ? GOLD : BORDER_GOLD}`,
+                borderRadius: "10px", padding: "26px 20px",
                 textAlign: "center", cursor: "pointer",
-                background: dragOver ? "rgba(89,16,48,0.04)" : "#FAF5F6",
+                background: dragOver ? "rgba(201,162,39,0.08)" : "rgba(255,255,255,0.03)",
                 transition: "all 0.15s", marginBottom: "10px",
               }}
             >
-              <svg width="22" height="22" fill="none" stroke={dragOver ? HERO : "#C09098"} strokeWidth="1.5" viewBox="0 0 24 24" style={{ margin: "0 auto 8px", display: "block" }}>
+              <svg width="22" height="22" fill="none" stroke={dragOver ? GOLD : "rgba(201,162,39,0.5)"} strokeWidth="1.5" viewBox="0 0 24 24" style={{ margin: "0 auto 8px", display: "block" }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 16V8m0 0-3 3m3-3 3 3M6.5 19a4.5 4.5 0 0 1 0-9h.5a5 5 0 0 1 9.8-1A4.5 4.5 0 0 1 17.5 19h-11Z" />
               </svg>
-              <p style={{ fontSize: "13px", fontWeight: 500, color: "#180509", marginBottom: "3px" }}>
+              <p style={{ fontSize: "13px", fontWeight: 500, color: "#fff", marginBottom: "3px" }}>
                 {dragOver ? "Drop to upload" : "Drop your PDF or DOCX here"}
               </p>
-              <p style={{ fontSize: "11px", color: "#9B6B72" }}>or click to browse · max 50 MB</p>
+              <p style={{ fontSize: "11px", color: WHITE_FAINT }}>or click to browse · max 50 MB</p>
             </div>
 
             <button
@@ -158,19 +153,17 @@ export default function MainPanel({ document, onUpload }: Props) {
               style={{
                 width: "100%", background: GOLD, color: "#2C0A10",
                 border: "none", borderRadius: "7px", padding: "11px 0",
-                fontSize: "14px", fontWeight: 700, cursor: "pointer", marginBottom: "24px",
+                fontSize: "14px", fontWeight: 700, cursor: "pointer", marginBottom: "22px",
               }}
             >
               Choose a file
             </button>
 
-            {uploadError && <p style={{ fontSize: "12px", color: "#DC2626", marginBottom: "16px" }}>{uploadError}</p>}
+            {uploadError && <p style={{ fontSize: "12px", color: "#F87171", marginBottom: "14px" }}>{uploadError}</p>}
 
-            {/* Divider */}
-            <div style={{ borderTop: "1px solid #E8D5D8", marginBottom: "24px" }} />
+            <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", marginBottom: "22px" }} />
 
-            {/* How it works — 3 steps */}
-            <p style={{ fontSize: "10px", fontWeight: 600, color: "#9B6B72", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "14px" }}>
+            <p style={{ fontSize: "10px", fontWeight: 600, color: WHITE_FAINT, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "14px" }}>
               How it works
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
@@ -182,13 +175,14 @@ export default function MainPanel({ document, onUpload }: Props) {
                 <div key={s.n} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
                   <div style={{
                     width: 26, height: 26, borderRadius: "7px", flexShrink: 0,
-                    background: HERO, display: "flex", alignItems: "center", justifyContent: "center",
+                    background: "rgba(201,162,39,0.15)", border: `1px solid ${BORDER_GOLD}`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <span style={{ color: "#fff", fontSize: "12px", fontWeight: 700 }}>{s.n}</span>
+                    <span style={{ color: GOLD, fontSize: "12px", fontWeight: 700 }}>{s.n}</span>
                   </div>
                   <div>
-                    <p style={{ fontSize: "13px", fontWeight: 600, color: "#180509", marginBottom: "2px" }}>{s.title}</p>
-                    <p style={{ fontSize: "12px", color: "#6B3A42", lineHeight: 1.6 }}>{s.body}</p>
+                    <p style={{ fontSize: "13px", fontWeight: 600, color: "#fff", marginBottom: "2px" }}>{s.title}</p>
+                    <p style={{ fontSize: "12px", color: WHITE_FAINT, lineHeight: 1.6 }}>{s.body}</p>
                   </div>
                 </div>
               ))}

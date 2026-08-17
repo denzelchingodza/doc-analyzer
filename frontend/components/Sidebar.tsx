@@ -77,17 +77,6 @@ export default function Sidebar({ documents, selectedId, onSelect, onUploaded, o
       background: PANEL, borderRight: `1px solid ${BORDER}`,
     }}>
 
-      {/* Logo */}
-      <div style={{ display: "flex", alignItems: "center", gap: "9px", paddingBottom: "4px" }}>
-        <Logo />
-        <div>
-          <span style={{ fontSize: "16px", fontWeight: 800, color: "#fff", letterSpacing: "-0.2px" }}>
-            Chunk<span style={{ color: GOLD }}>Doc</span>
-          </span>
-          <p style={{ fontSize: "10px", color: WHITE_FAINT, marginTop: "1px", letterSpacing: "0.04em" }}>Tygerberg Medical</p>
-        </div>
-      </div>
-
       {/* Upload zone */}
       <div>
         <p style={{ fontSize: "10px", fontWeight: 600, color: WHITE_FAINT, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "8px" }}>Upload</p>
