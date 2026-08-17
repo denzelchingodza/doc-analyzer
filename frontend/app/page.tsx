@@ -147,18 +147,9 @@ export default function App() {
         borderBottom: "1px solid rgba(255,255,255,0.08)",
         background: "rgba(0,0,0,0.2)",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "9px" }}>
-          <Logo />
-          <span style={{ fontSize: "15px", fontWeight: 800, color: "#fff", letterSpacing: "-0.2px" }}>
-            Chunk<span style={{ color: GOLD }}>Doc</span>
-          </span>
-          <span style={{
-            fontSize: "9px", letterSpacing: "0.16em", color: GOLD,
-            opacity: 0.75, fontWeight: 600, marginLeft: "6px",
-          }}>
-            TYGERBERG MEDICAL
-          </span>
-        </div>
+        <span style={{ fontSize: "10px", letterSpacing: "0.18em", color: GOLD, opacity: 0.85, fontWeight: 600 }}>
+          TYGERBERG MEDICAL
+        </span>
         <button
           className="mob-toggle-btn"
           onClick={() => setSidebarOpen((v) => !v)}
@@ -172,24 +163,6 @@ export default function App() {
           {sidebarOpen ? "Close" : "Documents"}
         </button>
       </nav>
-
-      {/* Notice bar */}
-      <div style={{
-        position: "relative", zIndex: 10, flexShrink: 0,
-        display: "flex", alignItems: "center", gap: "8px",
-        padding: "6px 20px",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-        background: "rgba(0,0,0,0.15)",
-      }}>
-        <svg width="12" height="12" fill="none" stroke={GOLD} strokeWidth="2" viewBox="0 0 24 24" style={{ opacity: 0.7, flexShrink: 0 }}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-        </svg>
-        <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.38)", lineHeight: 1.4 }}>
-          Upload{" "}
-          <span style={{ color: "rgba(201,162,39,0.82)", fontWeight: 500 }}>medical documents only</span>
-          {" "}— clinical guidelines, patient records, drug references, and research papers.
-        </span>
-      </div>
 
       {/* Main content */}
       <div style={{
