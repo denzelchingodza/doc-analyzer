@@ -1,7 +1,10 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -29,6 +32,34 @@ app = FastAPI(
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    if exc.status_code == 404:
+        return JSONResponse(
+            status_code=404,
+            content={"error": "not_found", "message": "This endpoint does not exist.", "path": str(request.url.path)},
+        )
+    if exc.status_code == 405:
+        return JSONResponse(
+            status_code=405,
+            content={"error": "method_not_allowed", "message": f"Method not allowed on {request.url.path}."},
+        )
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": "request_error", "message": str(exc.detail)},
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    first = exc.errors()[0] if exc.errors() else {}
+    field = " → ".join(str(loc) for loc in first.get("loc", [])) if first else "unknown"
+    return JSONResponse(
+        status_code=422,
+        content={"error": "validation_error", "message": f"Invalid input on field: {field}.", "detail": exc.errors()},
+    )
 app.add_middleware(SlowAPIMiddleware)
 
 app.add_middleware(

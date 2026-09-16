@@ -36,6 +36,14 @@ export const metadata: Metadata = {
     description: "Upload your medical documents and ask them questions.",
     images: ["/og-image.png"],
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "ChunkDoc",
+  },
+  other: {
+    "theme-color": "#12030A",
+  },
 };
 
 export default function RootLayout({

@@ -214,13 +214,21 @@ export default function App() {
         flexWrap: "wrap", gap: "8px",
         background: "rgba(0,0,0,0.25)",
       }}>
-        <a
-          href="https://denz-platform.vercel.app"
-          target="_blank" rel="noopener noreferrer"
-          style={{ color: "rgba(255,255,255,0.32)", fontSize: "11px", textDecoration: "none", letterSpacing: "0.01em" }}
-        >
-          Denzel Chingodza · 2026
-        </a>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <a
+            href="https://denz-platform.vercel.app"
+            target="_blank" rel="noopener noreferrer"
+            style={{ color: "rgba(255,255,255,0.32)", fontSize: "11px", textDecoration: "none", letterSpacing: "0.01em" }}
+          >
+            Denzel Chingodza · 2026
+          </a>
+          <a
+            href="/privacy"
+            style={{ color: "rgba(255,255,255,0.2)", fontSize: "11px", textDecoration: "none", letterSpacing: "0.04em" }}
+          >
+            Privacy
+          </a>
+        </div>
         <div style={{ display: "flex", gap: "14px", alignItems: "center" }}>
           {["FastAPI", "pgvector", "OpenAI", "Next.js"].map((tag) => (
             <span key={tag} style={{ color: "rgba(255,255,255,0.18)", fontSize: "10px", letterSpacing: "0.03em" }}>{tag}</span>
