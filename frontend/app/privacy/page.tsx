@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -154,7 +155,7 @@ export default function PrivacyPage() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div style={{ marginBottom: "40px" }}>
       <h2 style={{
@@ -174,7 +175,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function A({ href, children }: { href: string; children: React.ReactNode }) {
+function A({ href, children }: { href: string; children: ReactNode }) {
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" style={{
       color: "#C9A227",
