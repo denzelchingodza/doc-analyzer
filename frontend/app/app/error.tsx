@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 
 const GOLD = "#C9A227";
-const HERO = "#591030";
 
 export default function AppError({
   error,

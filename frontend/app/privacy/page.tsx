@@ -9,7 +9,6 @@ export const metadata: Metadata = {
 
 const DEEP = "#12030A";
 const GOLD = "#C9A227";
-const MAROON = "#591030";
 
 export default function PrivacyPage() {
   return (
@@ -168,9 +167,9 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
       }}>
         {title}
       </h2>
-      <p style={{ fontSize: "14px", color: "rgba(241,236,233,0.45)", lineHeight: 1.8 }}>
+      <div style={{ fontSize: "14px", color: "rgba(241,236,233,0.45)", lineHeight: 1.8 }}>
         {children}
-      </p>
+      </div>
     </div>
   );
 }
