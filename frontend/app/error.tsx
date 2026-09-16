@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 
 const DEEP = "#12030A";
 const GOLD = "#C9A227";
@@ -99,7 +100,7 @@ export default function GlobalError({
           >
             Try again
           </button>
-          <a href="/" style={{
+          <Link href="/" style={{
             display: "inline-flex",
             alignItems: "center",
             gap: "8px",
@@ -112,7 +113,7 @@ export default function GlobalError({
             padding: "10px 24px",
           }}>
             Go home
-          </a>
+          </Link>
         </div>
       </div>
     </div>
